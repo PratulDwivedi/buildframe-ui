@@ -2,3 +2,4 @@
 export * from "./data/list";
 export { brandCss, readableOn, isHex, type BrandColours } from "./lib/brand";
 export { safeNext, authMessage, signInErrorText, AUTH_MESSAGES, type AuthMessageCode } from "./auth/messages";
+export * from "./dashboard/series";

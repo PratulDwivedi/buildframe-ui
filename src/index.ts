@@ -18,6 +18,10 @@ export { useListUrl } from "./data/useListUrl";
 export * from "./data/list";
 export type { ViewPrefs, SavedView, Density, Layout } from "./data/prefs";
 
+// Dashboards
+export { StatTile, DashCard, Change, BarSeries, ShareBars, PeriodSwitch, type StatTone, type BarKey } from "./dashboard/Stats";
+export { periodChange, bucketSeries, pickPeriod, type PeriodChange, type SeriesPoint } from "./dashboard/series";
+
 // Shell
 export { PageHeaderProvider, PageHeader, PageActions, usePageHeader, usePageActionsSlot, useHasPageHeader, type PageHeaderValue } from "./shell/page-header";
 

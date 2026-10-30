@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.2 (2026-10-30)
+
+- Dashboards (from buildframe_ecomm's dashboard): `StatTile` (icon, value, change against the period before, footnote, optional link),
+  `DashCard`, `Change` (`upIsGood` false for errors), `BarSeries` (bars per day in plain CSS, one bar per key, a title per bar),
+  `ShareBars` (each row's share of the largest), `PeriodSwitch` (7 / 30 / 90 days in `?days`, the default left out of the URL).
+- core: `periodChange`, `bucketSeries` (days into weeks), `pickPeriod`.
+
 ## 0.1.1 (2026-10-30)
 
 - DataTable `pageSizes`: an app's own rows-per-page choices (buildframe-account uses 20, 50, 100).
