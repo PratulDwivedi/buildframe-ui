@@ -249,9 +249,9 @@ function SidebarBody({
 
       <nav className="min-h-0 flex-1 overflow-y-auto px-3 py-4 [scrollbar-width:none]">
         {nav.map((g) => (
-          <div key={g.group} className="mb-5 last:mb-0">
-            <p className={cn("mb-1.5 px-2.5 text-[10px] font-bold uppercase tracking-[0.14em] text-bf-muted", narrow && "lg:sr-only")}>{g.group}</p>
-            <ul className="space-y-0.5">
+          <div key={g.group} className="mb-4 last:mb-0">
+            <p className={cn("mb-1 px-2.5 text-[10px] font-bold uppercase tracking-[0.14em] text-bf-muted", narrow && "lg:sr-only")}>{g.group}</p>
+            <ul className={cn("space-y-px pl-2", narrow && "lg:pl-0")}>
               {g.items.map((it) => {
                 const on = it.href === active;
                 return (
@@ -261,7 +261,7 @@ function SidebarBody({
                       title={narrow ? it.label : undefined}
                       aria-current={on ? "page" : undefined}
                       className={cn(
-                        "flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm transition-colors [&_svg]:size-[18px] [&_svg]:shrink-0",
+                        "flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-[13px] transition-colors [&_svg]:size-4 [&_svg]:shrink-0",
                         narrow && "lg:justify-center lg:px-0",
                         on ? "bg-bf-brand-bg font-semibold text-bf-brand-strong" : "text-bf-ink hover:bg-bf-surface-alt [&_svg]:opacity-75",
                       )}

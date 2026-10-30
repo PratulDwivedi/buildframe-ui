@@ -10,6 +10,7 @@
   page header when a page has two tables).
 - DataTable search box: 192px wide from `sm` up (was up to 384px and growing); full width on a phone. The placeholder is also its title.
 - DataTable toolbar: Views and Display are icon buttons like "⋯", with a tooltip (the active saved view's name is in the Views tooltip).
+- Sidebar: condensed rows (13px, 16px icons, tighter padding and group gaps) indented under their group heading.
 - NavItem `match`: the item is active under that path instead of under its `href`.
 
 ## 0.1.1 (2026-10-30)
