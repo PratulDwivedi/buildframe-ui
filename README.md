@@ -7,8 +7,11 @@ slot, and (coming) the app shell and auth forms. Plan and decisions: [docs/plan.
 ## Install
 
 ```sh
-npm install github:PratulDwivedi/buildframe-ui#v0.1.0
+npm install https://codeload.github.com/PratulDwivedi/buildframe-ui/tar.gz/refs/tags/v0.1.0
 ```
+
+Use the tarball URL, not `github:PratulDwivedi/buildframe-ui`: npm records a `github:` install as
+`git+ssh`, which a Vercel build cannot fetch. To upgrade, change the tag in the URL and install again.
 
 `next.config.ts`:
 
