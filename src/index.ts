@@ -27,7 +27,7 @@ export { cn } from "./lib/cn";
 export { AppShell, ProfileMenu, useSidebar, activeHref, initials, type NavGroup, type NavItem, type ProfileLink, type ShellUser } from "./shell/AppShell";
 
 // Auth (signed-out pages)
-export { AuthShell, AuthLink, GoogleButton, CheckEmail } from "./auth/AuthShell";
+export { AuthShell, AuthLink, GoogleButton, CheckEmail, type GoogleStart } from "./auth/AuthShell";
 export {
   SignInForm,
   ForgotPasswordForm,

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeftIcon, KeyRoundIcon, MailIcon } from "lucide-react";
 import { Button } from "../primitives/Button";
 import { Field, FormError, FormNotice, Input } from "../primitives/Field";
-import { GoogleButton, CheckEmail } from "./AuthShell";
+import { GoogleButton, CheckEmail, type GoogleStart } from "./AuthShell";
 
 /**
  * The signed-out forms every product shares. They take their actions as props (server actions or client calls),
@@ -25,6 +25,7 @@ export function SignInForm({
   password,
   code,
   googleHref,
+  google,
   forgotHref,
   next,
   onSuccess,
@@ -39,6 +40,8 @@ export function SignInForm({
   code?: { request: (email: string) => Promise<AuthResult>; verify: (email: string, code: string) => Promise<AuthResult> };
   /** Shows "Continue with Google" linking here. */
   googleHref?: string;
+  /** Or Google started by a server action. */
+  google?: GoogleStart;
   forgotHref?: string;
   /** Where to go after signing in (already checked as same-site by the page, see safeNext). */
   next?: string;
@@ -123,7 +126,7 @@ export function SignInForm({
     <div>
       <FormNotice message={notice} className="mb-5" />
       {!tried && <FormError message={outerError} className="mb-5" />}
-      {googleHref && !awaitingCode && <GoogleButton href={googleHref} />}
+      {(google || googleHref) && !awaitingCode && <GoogleButton start={google} href={googleHref} />}
 
       {mode === "code" && awaitingCode && code ? (
         <form onSubmit={(e) => (e.preventDefault(), run(() => code.verify(email, otp), done))} className="space-y-4">
@@ -334,6 +337,7 @@ export function SignUpForm({
   organisationPlaceholder = "Acme Foods",
   submitLabel = "Create my account",
   googleHref,
+  google,
   terms,
   signInHref,
 }: {
@@ -344,6 +348,7 @@ export function SignUpForm({
   organisationPlaceholder?: string;
   submitLabel?: string;
   googleHref?: string;
+  google?: GoogleStart;
   /** Terms and privacy links shown under the button. */
   terms?: { termsHref: string; privacyHref: string };
   signInHref: string;
@@ -356,7 +361,7 @@ export function SignUpForm({
 
   return (
     <div>
-      {googleHref && <GoogleButton href={googleHref} label="Sign up with Google" />}
+      {(google || googleHref) && <GoogleButton start={google} href={googleHref} label="Sign up with Google" />}
       <form
         onSubmit={(e) => {
           e.preventDefault();

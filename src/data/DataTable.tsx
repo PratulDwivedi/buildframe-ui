@@ -116,9 +116,10 @@ export type DataTableProps<T> = {
   emptyText?: React.ReactNode;
   /** Height of the scroll box on a desktop, so the header can stick. CSS length. */
   maxHeight?: string;
+  /** The rows-per-page choices; the page must accept the same ones (parseList's pageSizes). */
+  pageSizes?: number[];
 };
 
-const SIZE_OPTIONS: ComboOption[] = PAGE_SIZES.map((n) => ({ value: String(n), label: String(n) }));
 
 const filterLabel = (f: DataFilter) => f.label ?? f.placeholder.replace(/^(All|Any)\s+/i, "").replace(/^./, (c) => c.toUpperCase());
 
@@ -157,7 +158,9 @@ export function DataTable<T>({
   savedViews = true,
   emptyText = "Nothing to show yet.",
   maxHeight = "calc(100dvh - 15rem)",
+  pageSizes = PAGE_SIZES,
 }: DataTableProps<T>) {
+  const sizeOptions: ComboOption[] = pageSizes.map((n) => ({ value: String(n), label: String(n) }));
   const router = useRouter();
   const { push, replaceAll, pending, sp, pathname } = useListUrl();
   const [search, setSearch] = React.useState(query.q);
@@ -607,7 +610,7 @@ export function DataTable<T>({
             <div className="flex items-center gap-2">
               <span className="hidden sm:inline">Rows per page</span>
               <div className="w-[4.5rem]">
-                <Combobox size="xs" value={String(query.size)} clearable={false} aria-label="Rows per page" onChange={(v) => push({ size: v })} options={SIZE_OPTIONS} />
+                <Combobox size="xs" value={String(query.size)} clearable={false} aria-label="Rows per page" onChange={(v) => push({ size: v })} options={sizeOptions} />
               </div>
               <span>
                 {from} to {to} of {total}

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.1 (2026-10-30)
+
+- DataTable `pageSizes`: an app's own rows-per-page choices (buildframe-account uses 20, 50, 100).
+- AppShell: `brand.wordmark` (the name in the product's own lettering), `menuExtra` (more controls in the account
+  menu, such as an accent picker), `tenant` may be any element (a badge beside the name).
+- SlideOver `closeOnEscape`: off for a panel only its close button may close.
+- Google sign-in started by a server action (`google={{ action, next }}`) as well as by a link.
+
 ## 0.1.0 (2026-10-30)
 
 - Theme: `bf-*` tokens on the InsightUno palette, light and dark, device-following opt-in; `brandCss` for runtime rebranding.

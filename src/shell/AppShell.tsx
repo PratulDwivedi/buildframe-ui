@@ -78,21 +78,27 @@ export function AppShell({
   profileLinks = [],
   onSignOut,
   theme,
+  menuExtra,
   collapsible = true,
   banner,
   children,
 }: {
-  /** The logo mark, the product or tenant name, a small line under it, and where the logo links. */
-  brand: { logo: React.ReactNode; name: string; subtitle?: string; href: string };
+  /**
+   * The logo mark, the product or tenant name (also the topbar's title when a page sets none), a small line under
+   * it, and where the logo links. `wordmark` draws the name in the product's own lettering instead of plain text.
+   */
+  brand: { logo: React.ReactNode; name: string; wordmark?: React.ReactNode; subtitle?: string; href: string };
   nav: NavGroup[];
   user: ShellUser;
-  /** The workspace or store name, shown in the account menu. */
-  tenant?: string | null;
+  /** The workspace or store name, shown in the account menu (may carry a badge). */
+  tenant?: React.ReactNode;
   profileLinks?: ProfileLink[];
   /** A server action or a client sign-out. */
   onSignOut: () => void | Promise<void>;
   /** Shows the Dark mode switch in the account menu. */
   theme?: { dark: boolean; toggle: () => void };
+  /** More controls in the account menu, above Sign out (an accent colour picker). */
+  menuExtra?: React.ReactNode;
   /** Desktop collapse to icons. */
   collapsible?: boolean;
   /** A strip under the topbar (a plan or trial notice). */
@@ -163,7 +169,7 @@ export function AppShell({
           >
             <SidebarBody brand={brand} nav={nav} narrow={narrow} collapsible={collapsible} path={path} />
             <div className="border-t border-bf-line p-2">
-              <ProfileMenu user={user} tenant={tenant} links={profileLinks} onSignOut={onSignOut} theme={theme} narrow={narrow} />
+              <ProfileMenu user={user} tenant={tenant} links={profileLinks} onSignOut={onSignOut} theme={theme} extra={menuExtra} narrow={narrow} />
             </div>
           </aside>
 
@@ -185,7 +191,7 @@ function SidebarBody({
   collapsible,
   path,
 }: {
-  brand: { logo: React.ReactNode; name: string; subtitle?: string; href: string };
+  brand: { logo: React.ReactNode; name: string; wordmark?: React.ReactNode; subtitle?: string; href: string };
   nav: NavGroup[];
   narrow: boolean;
   collapsible: boolean;
@@ -199,7 +205,7 @@ function SidebarBody({
         <Link href={brand.href} className="flex min-w-0 items-center gap-2.5">
           <span className="grid size-8 shrink-0 place-items-center">{brand.logo}</span>
           <span className={cn("min-w-0 leading-tight", narrow && "lg:hidden")}>
-            <span className="block truncate text-sm font-bold tracking-tight text-bf-ink">{brand.name}</span>
+            <span className="block truncate text-sm font-bold tracking-tight text-bf-ink">{brand.wordmark ?? brand.name}</span>
             {brand.subtitle && <span className="block truncate text-[10px] font-semibold uppercase tracking-[0.14em] text-bf-muted">{brand.subtitle}</span>}
           </span>
         </Link>
@@ -313,13 +319,15 @@ export function ProfileMenu({
   links,
   onSignOut,
   theme,
+  extra,
   narrow = false,
 }: {
   user: ShellUser;
-  tenant?: string | null;
+  tenant?: React.ReactNode;
   links: ProfileLink[];
   onSignOut: () => void | Promise<void>;
   theme?: { dark: boolean; toggle: () => void };
+  extra?: React.ReactNode;
   narrow?: boolean;
 }) {
   const [open, setOpen] = React.useState(false);
@@ -349,7 +357,7 @@ export function ProfileMenu({
             </div>
             {user.role && <span className="shrink-0 rounded-full bg-bf-neutral-bg px-2 py-0.5 text-[10px] font-semibold capitalize text-bf-neutral-ink">{user.role}</span>}
           </div>
-          {tenant && <p className="truncate border-b border-bf-line px-3.5 py-2 text-[11px] text-bf-muted">{tenant}</p>}
+          {tenant && <div className="flex items-center gap-2 truncate border-b border-bf-line px-3.5 py-2 text-[11px] text-bf-muted">{tenant}</div>}
 
           {(links.length > 0 || theme) && (
             <div className="p-1.5">
@@ -379,6 +387,8 @@ export function ProfileMenu({
               )}
             </div>
           )}
+
+          {extra && <div className="border-t border-bf-line px-3.5 py-3">{extra}</div>}
 
           <div className="border-t border-bf-line p-1.5">
             <button

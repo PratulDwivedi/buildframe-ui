@@ -36,6 +36,7 @@ export function SlideOver({
   footer,
   width = "md",
   closeOnBackdrop = true,
+  closeOnEscape = true,
   children,
 }: {
   open?: boolean;
@@ -48,6 +49,8 @@ export function SlideOver({
   width?: SlideOverWidth;
   /** Off for forms: a stray click outside must not throw typed data away. */
   closeOnBackdrop?: boolean;
+  /** Off when only the close button (or the form's Cancel) may close it. */
+  closeOnEscape?: boolean;
   children: React.ReactNode;
 }) {
   const router = useRouter();
@@ -101,7 +104,7 @@ export function SlideOver({
   React.useEffect(() => {
     if (!present) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && !e.defaultPrevented) close();
+      if (e.key === "Escape" && !e.defaultPrevented && closeOnEscape) close();
       if (e.key === "Tab" && panelRef.current) {
         const items = Array.from(panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE)).filter((el) => el.offsetParent !== null);
         if (items.length === 0) return;
@@ -118,7 +121,7 @@ export function SlideOver({
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [close, present]);
+  }, [close, present, closeOnEscape]);
 
   if (!mounted || !present) return null;
 
