@@ -30,6 +30,8 @@ export type NavItem = {
   icon?: React.ReactNode;
   /** Active only on this exact path (a dashboard at "/admin" must not light up on every page under it). */
   exact?: boolean;
+  /** Active under this path instead of under `href` (an item linking to "/admin/invoicing/invoices" lit on all of "/admin/invoicing"). */
+  match?: string;
   /** A count or tag at the end of the row. */
   badge?: React.ReactNode;
 };
@@ -54,8 +56,11 @@ const COLLAPSE_KEY = "bf-ui:sidebar-collapsed";
 export function activeHref(path: string, groups: NavGroup[]): string | undefined {
   return groups
     .flatMap((g) => g.items)
-    .filter((it) => (it.exact ? path === it.href : path === it.href || path.startsWith(`${it.href}/`)))
-    .sort((a, b) => b.href.length - a.href.length)[0]?.href;
+    .filter((it) => {
+      const base = it.match ?? it.href;
+      return it.exact ? path === it.href : path === base || path.startsWith(`${base}/`) || path === it.href;
+    })
+    .sort((a, b) => (b.match ?? b.href).length - (a.match ?? a.href).length)[0]?.href;
 }
 
 /** From the name, else from the email's local part ("hello+admin@x" -> "HA"), never from the domain. */

@@ -6,6 +6,9 @@
   `DashCard`, `Change` (`upIsGood` false for errors), `BarSeries` (bars per day in plain CSS, one bar per key, a title per bar),
   `ShareBars` (each row's share of the largest), `PeriodSwitch` (7 / 30 / 90 days in `?days`, the default left out of the URL).
 - core: `periodChange`, `bucketSeries` (days into weeks), `pickPeriod`.
+- DataTable `paged={false}` (a whole short list: no rows-per-page or page buttons) and `refresh={false}` (no second Refresh in the
+  page header when a page has two tables).
+- NavItem `match`: the item is active under that path instead of under its `href`.
 
 ## 0.1.1 (2026-10-30)
 

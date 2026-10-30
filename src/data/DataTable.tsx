@@ -118,6 +118,10 @@ export type DataTableProps<T> = {
   maxHeight?: string;
   /** The rows-per-page choices; the page must accept the same ones (parseList's pageSizes). */
   pageSizes?: number[];
+  /** false: the rows are the whole list (a short one), so no rows-per-page or page buttons. */
+  paged?: boolean;
+  /** false: add no Refresh button to the page header (the second table on a page, so there is only one). */
+  refresh?: boolean;
 };
 
 
@@ -158,6 +162,8 @@ export function DataTable<T>({
   savedViews = true,
   emptyText = "Nothing to show yet.",
   maxHeight = "calc(100dvh - 15rem)",
+  paged = true,
+  refresh = true,
   pageSizes = PAGE_SIZES,
 }: DataTableProps<T>) {
   const sizeOptions: ComboOption[] = pageSizes.map((n) => ({ value: String(n), label: String(n) }));
@@ -300,10 +306,12 @@ export function DataTable<T>({
 
   return (
     <>
-      <PageActions>
-        {headerActions}
-        <RefreshButton />
-      </PageActions>
+      {(refresh || headerActions) && (
+        <PageActions>
+          {headerActions}
+          {refresh && <RefreshButton />}
+        </PageActions>
+      )}
 
       {tabs}
 
@@ -596,7 +604,7 @@ export function DataTable<T>({
         </div>
 
         {/* ── paging ── */}
-        {total > 0 && (
+        {total > 0 && (paged || (selectable && selected.size > 0)) && (
           <div className={cn("flex min-h-12 flex-wrap items-center justify-between gap-3 border-t border-bf-line px-4 py-2 text-xs text-bf-muted", selected.size > 0 && "bg-bf-brand-bg")}>
             {selectable && selected.size > 0 ? (
               <div className="flex min-w-0 flex-wrap items-center gap-2 text-[13px]" role="region" aria-label="Selected rows">

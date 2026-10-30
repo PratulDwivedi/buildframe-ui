@@ -47,3 +47,10 @@ it("draws the page title and actions in the topbar, and signs out from the accou
   await userEvent.click(screen.getByRole("menuitem", { name: /Sign out/ }));
   expect(signOut).toHaveBeenCalled();
 });
+
+it("lights an item under its match path", () => {
+  const groups = [{ group: "P", items: [{ href: "/admin/invoicing/invoices", match: "/admin/invoicing", label: "Invoices" }, { href: "/admin/logs", label: "Logs" }] }];
+  expect(activeHref("/admin/invoicing", groups)).toBe("/admin/invoicing/invoices");
+  expect(activeHref("/admin/invoicing/invoices/inv_1", groups)).toBe("/admin/invoicing/invoices");
+  expect(activeHref("/admin/invoicingx", groups)).toBeUndefined();
+});

@@ -115,3 +115,13 @@ it("a click in the checkbox cell that misses the box ticks the row and does not 
   expect(open).not.toHaveBeenCalled();
   expect(screen.getByText("1 selected")).toBeInTheDocument();
 });
+
+it("a whole short list draws no paging, and a second table adds no Refresh", () => {
+  const { rerender } = render(<DataTable columns={columns} rows={rows} rowKey={(r) => r.id} total={2} query={query} />);
+  expect(screen.getByText("Rows per page")).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "Refresh" })).toBeInTheDocument();
+  rerender(<DataTable columns={columns} rows={rows} rowKey={(r) => r.id} total={2} query={query} paged={false} refresh={false} />);
+  expect(screen.queryByText("Rows per page")).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Refresh" })).not.toBeInTheDocument();
+  expect(screen.getAllByText("Bag").length).toBeGreaterThan(0);
+});
