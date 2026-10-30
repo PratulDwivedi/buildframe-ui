@@ -320,7 +320,7 @@ export function DataTable<T>({
         <div className="space-y-2 border-b border-bf-line p-3">
           <div className="flex flex-wrap items-center gap-2">
             {searchPlaceholder !== null && (
-              <div className="relative min-w-[180px] flex-1 sm:min-w-[260px] sm:max-w-sm">
+              <div className="relative min-w-[180px] flex-1 sm:w-48 sm:min-w-0 sm:flex-none">
                 <SearchIcon className="pointer-events-none absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-bf-muted" />
                 <Input
                   type="search"
@@ -328,6 +328,7 @@ export function DataTable<T>({
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder={searchPlaceholder}
                   aria-label={searchPlaceholder}
+                  title={searchPlaceholder}
                   className="h-9 bg-bf-canvas pl-9 pr-8 text-[13px] [&::-webkit-search-cancel-button]:hidden"
                 />
                 {search && (

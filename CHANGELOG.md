@@ -8,6 +8,7 @@
 - core: `periodChange`, `bucketSeries` (days into weeks), `pickPeriod`.
 - DataTable `paged={false}` (a whole short list: no rows-per-page or page buttons) and `refresh={false}` (no second Refresh in the
   page header when a page has two tables).
+- DataTable search box: 192px wide from `sm` up (was up to 384px and growing); full width on a phone. The placeholder is also its title.
 - NavItem `match`: the item is active under that path instead of under its `href`.
 
 ## 0.1.1 (2026-10-30)
