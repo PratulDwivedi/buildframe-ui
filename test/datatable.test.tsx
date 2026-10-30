@@ -135,3 +135,20 @@ it("Views and Display are icon buttons with a tooltip", () => {
   expect(views.getAttribute("title")).toBe("Saved views");
   expect(views.textContent).toBe("");
 });
+
+it("hands a menu action the visible column keys, in order, so a browser CSV can follow them", async () => {
+  const onSelect = vi.fn();
+  render(
+    <DataTable
+      columns={columns}
+      rows={rows}
+      rowKey={(r) => r.id}
+      total={2}
+      query={query}
+      menuActions={[{ label: "Download CSV", onSelect }]}
+    />,
+  );
+  await userEvent.click(screen.getByRole("button", { name: "More actions" }));
+  await userEvent.click(screen.getByText("Download CSV"));
+  expect(onSelect).toHaveBeenCalledWith(["name", "price"]);
+});

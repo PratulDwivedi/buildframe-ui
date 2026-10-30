@@ -1,4 +1,4 @@
-import { applyList, inRange, matchesAny, parseList, pickExportColumns, splitMany } from "../src/data/list";
+import { applyList, inRange, matchesAny, parseList, pickExportColumns, splitMany, toCsv, type ExportColumn } from "../src/data/list";
 
 describe("parseList", () => {
   const opts = { filters: { status: ["paid", "shipped", "cancelled"], total_min: null }, sorts: ["created", "total"], defaultSort: "created" };
@@ -62,5 +62,16 @@ describe("pickExportColumns", () => {
   });
   it("returns everything without cols", () => {
     expect(pickExportColumns(all, null)).toHaveLength(6);
+  });
+});
+
+describe("toCsv", () => {
+  it("writes a header row and quotes only cells that need it", () => {
+    type R = { n: string; v: number | null };
+    const cols: ExportColumn<R>[] = [
+      { header: "Name", value: (r) => r.n },
+      { header: "Value, INR", value: (r) => r.v },
+    ];
+    expect(toCsv(cols, [{ n: 'Say "hi"', v: 5 }, { n: "a\nb", v: null }])).toBe('Name,"Value, INR"\n"Say ""hi""",5\n"a\nb",');
   });
 });

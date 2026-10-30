@@ -34,7 +34,7 @@ Dark mode follows `.dark` on `<html>`. To also follow the device, put `data-bf-t
 | Import | What | Where it runs |
 |---|---|---|
 | `@buildframe/ui` | components (`Combobox`, `MultiCombobox`, `DataTable`, `SlideOver`, `SlideOverForm`, `Button`, `Field`, `StatusPill` ...) | client components |
-| `@buildframe/ui/core` | `parseList`, `applyList`, `pickExportColumns`, `brandCss` ... | anywhere, incl. route handlers |
+| `@buildframe/ui/core` | `parseList`, `applyList`, `pickExportColumns`, `toCsv`, `brandCss` ... | anywhere, incl. route handlers |
 | `@buildframe/ui/theme.css` | `bf-*` colour tokens, light and dark | CSS |
 
 ## Tokens

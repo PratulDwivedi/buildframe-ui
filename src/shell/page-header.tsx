@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { createPortal } from "react-dom";
+import { PageHelp } from "../help/PageHelp";
 
 /**
  * The page title and the page's action buttons live in the shell's topbar, so they stay in view while the page
@@ -42,14 +43,22 @@ export function useHasPageHeader() {
   return React.useContext(Ctx) !== null;
 }
 
-/** Declares the page's title and subtitle. Renders nothing. */
-export function PageHeader({ title, subtitle }: PageHeaderValue) {
+/**
+ * Declares the page's title and subtitle. With `help`, adds the "?" at the right end of the header that opens a
+ * panel explaining the page (build it from HelpSection and HelpSteps); otherwise renders nothing.
+ */
+export function PageHeader({ title, subtitle, help }: PageHeaderValue & { help?: React.ReactNode }) {
   const ctx = React.useContext(Ctx);
   const setHeader = ctx?.setHeader;
   React.useEffect(() => {
     setHeader?.({ title, subtitle });
   }, [title, subtitle, setHeader]);
-  return null;
+  if (!help) return null;
+  return (
+    <PageActions>
+      <PageHelp title={title}>{help}</PageHelp>
+    </PageActions>
+  );
 }
 
 /**

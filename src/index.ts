@@ -15,12 +15,17 @@ export { Popover, MenuItem, MenuLabel, MenuSeparator, menuItemClass } from "./ov
 export { DataTable, filterParams, type DataColumn, type DataFilter, type DataTableProps } from "./data/DataTable";
 export { MoreMenu, RefreshButton, type MoreItem } from "./data/toolbar";
 export { useListUrl } from "./data/useListUrl";
+export { downloadText, downloadCsv } from "./data/download";
 export * from "./data/list";
 export type { ViewPrefs, SavedView, Density, Layout } from "./data/prefs";
 
 // Dashboards
 export { StatTile, DashCard, Change, BarSeries, ShareBars, PeriodSwitch, type StatTone, type BarKey } from "./dashboard/Stats";
 export { periodChange, bucketSeries, pickPeriod, type PeriodChange, type SeriesPoint } from "./dashboard/series";
+
+// Help panel (the "?" at the right end of a page header)
+export { PageHelp } from "./help/PageHelp";
+export { HelpSection, HelpSteps } from "./help/sections";
 
 // Shell
 export { PageHeaderProvider, PageHeader, PageActions, usePageHeader, usePageActionsSlot, useHasPageHeader, type PageHeaderValue } from "./shell/page-header";

@@ -38,7 +38,14 @@ export function RefreshButton() {
   );
 }
 
-export type MoreItem = { label: string; icon?: React.ReactNode; href?: string; download?: boolean; onSelect?: () => void };
+export type MoreItem = {
+  label: string;
+  icon?: React.ReactNode;
+  href?: string;
+  download?: boolean;
+  /** Receives the keys of the columns the person can see, in their order, so a CSV built in the browser can follow them. */
+  onSelect?: (visibleCols: string[]) => void;
+};
 
 /**
  * The table's "⋯" menu, at the right end of its toolbar (as buildframe-account's ReportTable): Download CSV and
@@ -82,7 +89,7 @@ export function MoreMenu({ exportPath, cols, items = [] }: { exportPath?: string
               href={it.href}
               download={it.download}
               onSelect={() => {
-                it.onSelect?.();
+                it.onSelect?.(cols ? cols.split(",") : []);
                 close();
               }}
             >

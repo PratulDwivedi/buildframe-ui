@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.3 (2026-10-30)
+
+- Help panel (from TripSetu): `PageHeader` takes `help`, which adds a "?" at the right end of the header opening a panel
+  that explains the page. `PageHelp` is the button and panel on its own; `HelpSection` and `HelpSteps` build the text
+  and work in server components.
+- A CSV built in the browser can follow the visible columns: a `menuActions` item's `onSelect` now receives the keys of
+  the columns the person can see, in their order. Pass them to `pickExportColumns` as `cols`.
+- core: `toCsv` (export columns and rows to CSV text). Components: `downloadCsv`, `downloadText` (save it in the browser).
+
 ## 0.1.2 (2026-10-30)
 
 - Dashboards (from buildframe_ecomm's dashboard): `StatTile` (icon, value, change against the period before, footnote, optional link),

@@ -181,3 +181,15 @@ export function pickExportColumns<T, C>(all: ExportColumn<T, C>[], cols: string 
   const tied = wanted.flatMap((k) => all.filter((c) => c.col === k));
   return [...lead, ...tied, ...trail];
 }
+
+/**
+ * CSV text from export columns and rows: every cell quoted when it holds a comma, quote or line break, a header
+ * row first. For a list built in the browser; pair with pickExportColumns so it follows the visible columns.
+ */
+export function toCsv<T, C>(columns: ExportColumn<T, C>[], rows: T[]): string {
+  const cell = (v: unknown) => {
+    const s = v == null ? "" : String(v);
+    return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  return [columns.map((c) => cell(c.header)).join(","), ...rows.map((r) => columns.map((c) => cell(c.value(r))).join(","))].join("\n");
+}
