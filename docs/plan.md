@@ -8,6 +8,10 @@ DataTable (exports follow the visible columns, bulk archive on 5 lists, Orders' 
 panels are SlideOverForm, its sign-in is AuthShell + SignInForm. Checked on desktop light and dark; 400px left to
 Pratul. Still to do: the public repo and tag, switch ecomm to the tag, deploy; then P6 buildframe-account.
 
+Rollout (2026-10-30): ecomm admin, buildframe-account, TripSetu and **portage_now_web_site admin** are live on the
+package. Portage Now: v0.1.3, commit c585f02, live on www.portagenow.com; shell, header, the 6 lists, Combobox,
+AuthShell sign-in with Google; its primary/slate Tailwind colours are bridged to Buildframe blue in its admin.css.
+
 ## 1. Why
 
 The same components were copied app to app and have drifted. Scan of 2026-10-30:
@@ -126,7 +130,7 @@ in scope for v1 (storefront is themed per store).
 | P4 | Auth UI + server helpers | tests for safeNext and error text |
 | P5 | buildframe_ecomm admin console switched over: bf-* token bridge in globals.css (admin only, storefront untouched), then shell, login, and the 8 list screens (products, orders, customers, categories, departments, brands, promotions, pages), then forms on Field / Combobox / SlideOver; delete the replaced local copies | lint + build; every screen on the demo store at 400px and in dark mode; Pratul's look-and-feel review; then production deploy |
 | P6 | buildframe-account, after the other agent's work is merged | same checks |
-| P7 | genfashion, insightuno, vyapar_ping, karaar (when started), portage_now admin | per app |
+| P7 | genfashion, insightuno, vyapar_ping, karaar (when started), portage_now admin (DONE 2026-10-30) | per app |
 | P8 | TripSetu, only with its own go, tested on its demo tenant before anything reaches a live client | |
 
 ## 8. Risks
