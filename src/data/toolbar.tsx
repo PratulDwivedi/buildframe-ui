@@ -142,9 +142,8 @@ export function DisplayMenu({
       label="Display"
       width={280}
       trigger={(p) => (
-        <Button {...p} size="sm" variant="ghost" className="h-9 px-2.5" title="Display: layout, spacing, columns">
+        <Button {...p} size="icon-sm" variant="ghost" className="size-9" aria-label="Display" title="Display: layout, spacing, columns">
           <Settings2Icon />
-          <span className="hidden md:inline">Display</span>
         </Button>
       )}
     >
@@ -261,9 +260,10 @@ export function ViewsMenu({
       label="Saved views"
       width={272}
       trigger={(p) => (
-        <Button {...p} size="sm" variant="ghost" className="h-9 max-w-44 px-2.5" title="Saved views">
+        <Button {...p} size="icon-sm" variant="ghost" className="size-9"
+          aria-label={active ? `Saved views, showing ${active.name}` : "Saved views"}
+          title={active ? `Saved views: ${active.name}` : "Saved views"}>
           <BookmarkIcon className={cn(active && "fill-current text-bf-brand-strong")} />
-          <span className="hidden truncate md:inline">{active ? active.name : "Views"}</span>
         </Button>
       )}
     >

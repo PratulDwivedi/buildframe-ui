@@ -9,6 +9,7 @@
 - DataTable `paged={false}` (a whole short list: no rows-per-page or page buttons) and `refresh={false}` (no second Refresh in the
   page header when a page has two tables).
 - DataTable search box: 192px wide from `sm` up (was up to 384px and growing); full width on a phone. The placeholder is also its title.
+- DataTable toolbar: Views and Display are icon buttons like "⋯", with a tooltip (the active saved view's name is in the Views tooltip).
 - NavItem `match`: the item is active under that path instead of under its `href`.
 
 ## 0.1.1 (2026-10-30)

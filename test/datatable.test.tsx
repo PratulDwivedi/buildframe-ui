@@ -125,3 +125,13 @@ it("a whole short list draws no paging, and a second table adds no Refresh", () 
   expect(screen.queryByRole("button", { name: "Refresh" })).not.toBeInTheDocument();
   expect(screen.getAllByText("Bag").length).toBeGreaterThan(0);
 });
+
+it("Views and Display are icon buttons with a tooltip", () => {
+  render(<DataTable columns={columns} rows={rows} rowKey={(r) => r.id} total={2} query={query} />);
+  const display = screen.getByRole("button", { name: "Display" });
+  expect(display.getAttribute("title")).toBe("Display: layout, spacing, columns");
+  expect(display.textContent).toBe("");
+  const views = screen.getByRole("button", { name: "Saved views" });
+  expect(views.getAttribute("title")).toBe("Saved views");
+  expect(views.textContent).toBe("");
+});
