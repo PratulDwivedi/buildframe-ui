@@ -1,0 +1,51 @@
+{
+  "name": "@buildframe/ui",
+  "version": "0.1.0",
+  "description": "Shared React components for Buildframe products: searchable dropdown, data table with phone cards and advanced views, slide-over, app shell and auth forms.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./core": "./src/core.ts",
+    "./theme.css": "./src/theme.css"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "sync": "sh scripts/sync.sh"
+  },
+  "peerDependencies": {
+    "lucide-react": ">=0.400.0",
+    "next": ">=15",
+    "react": ">=19",
+    "react-dom": ">=19"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.3.1"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "jsdom": "^26.1.0",
+    "lucide-react": "^0.545.0",
+    "next": "16.2.12",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "typescript": "^5",
+    "vitest": "^3.2.4"
+  }
+}

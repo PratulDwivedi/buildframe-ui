@@ -1,0 +1,188 @@
+/* ============================================================================
+   @buildframe/ui theme
+
+   Import once, after Tailwind:   @import "tailwindcss";
+                                  @import "@buildframe/ui/theme.css";
+
+   Every token is namespaced `bf-` (bg-bf-surface, text-bf-muted ...). The apps
+   do not agree on names: in InsightUno `muted` is a TEXT colour, in shadcn apps
+   (ecomm, vyapar_ping) `muted` is a BACKGROUND. Unprefixed names would collide.
+
+   Values are the InsightUno palette (insightuno docs/decisions.md #16), the
+   default look for every product. A product or a tenant changes the brand at
+   runtime by overriding --bf-brand and friends, see brandCss() in this package.
+
+   Dark mode: `.dark` on <html>, as in the InsightUno family. An app that also
+   follows the device (ecomm) puts data-bf-theme="system" on <html>; the device
+   preference then applies unless <html> has `.light`.
+   ============================================================================ */
+
+/* Tailwind must see the classes used inside the package. Relative to this file. */
+@source "./";
+
+@theme inline {
+  --color-bf-canvas: var(--bf-canvas);
+  --color-bf-surface: var(--bf-surface);
+  --color-bf-surface-alt: var(--bf-surface-alt);
+  --color-bf-ink: var(--bf-ink);
+  --color-bf-copy: var(--bf-copy);
+  --color-bf-muted: var(--bf-muted);
+  --color-bf-line: var(--bf-line);
+  --color-bf-line-strong: var(--bf-line-strong);
+
+  --color-bf-brand: var(--bf-brand);
+  --color-bf-brand-hover: var(--bf-brand-hover);
+  --color-bf-brand-strong: var(--bf-brand-strong);
+  --color-bf-brand-bg: var(--bf-brand-bg);
+  --color-bf-on-brand: var(--bf-on-brand);
+  --color-bf-accent: var(--bf-accent);
+  --color-bf-accent-strong: var(--bf-accent-strong);
+  --color-bf-on-accent: var(--bf-on-accent);
+  --color-bf-ai: var(--bf-ai);
+  --color-bf-ai-strong: var(--bf-ai-strong);
+  --color-bf-ai-bg: var(--bf-ai-bg);
+
+  --color-bf-ok-bg: var(--bf-ok-bg);
+  --color-bf-ok-ink: var(--bf-ok-ink);
+  --color-bf-warn-bg: var(--bf-warn-bg);
+  --color-bf-warn-ink: var(--bf-warn-ink);
+  --color-bf-warn-line: var(--bf-warn-line);
+  --color-bf-danger: var(--bf-danger);
+  --color-bf-danger-bg: var(--bf-danger-bg);
+  --color-bf-danger-ink: var(--bf-danger-ink);
+  --color-bf-danger-line: var(--bf-danger-line);
+  --color-bf-neutral-bg: var(--bf-neutral-bg);
+  --color-bf-neutral-ink: var(--bf-neutral-ink);
+
+  --color-bf-chart-1: var(--bf-chart-1);
+  --color-bf-chart-2: var(--bf-chart-2);
+  --color-bf-chart-3: var(--bf-chart-3);
+  --color-bf-chart-4: var(--bf-chart-4);
+  --color-bf-chart-5: var(--bf-chart-5);
+}
+
+:root {
+  --bf-canvas: #f7f9fc;
+  --bf-surface: #ffffff;
+  --bf-surface-alt: #eef2f8;
+  --bf-ink: #0b2e6f;
+  --bf-copy: #172033;
+  --bf-muted: #667085;
+  --bf-line: #e4e9f0;
+  --bf-line-strong: #cfd7e3;
+
+  /* Deep Blue: 6.5:1 with white, so fill and text share it on light. */
+  --bf-brand: #1554d1;
+  --bf-brand-hover: #0b2e6f;
+  --bf-brand-strong: #1554d1;
+  --bf-brand-bg: #e8effc;
+  --bf-on-brand: #ffffff;
+  /* Teal: a fill only on light (2.5:1); words use accent-strong. */
+  --bf-accent: #12b89a;
+  --bf-accent-strong: #0e7c68;
+  --bf-on-accent: #062e27;
+  --bf-ai: #6c63e8;
+  --bf-ai-strong: #4f46c8;
+  --bf-ai-bg: #efeefd;
+
+  --bf-ok-bg: #e3f6ed;
+  --bf-ok-ink: #0f7a4f;
+  --bf-warn-bg: #fef4e2;
+  --bf-warn-ink: #8a5a0b;
+  --bf-warn-line: #f9dca8;
+  --bf-danger: #e5484d;
+  --bf-danger-bg: #fdecec;
+  --bf-danger-ink: #b4262b;
+  --bf-danger-line: #f6c6c8;
+  --bf-neutral-bg: #eef2f7;
+  --bf-neutral-ink: #667085;
+
+  --bf-chart-1: #1554d1;
+  --bf-chart-2: #08bdeb;
+  --bf-chart-3: #12b89a;
+  --bf-chart-4: #6c63e8;
+  --bf-chart-5: #168fe8;
+
+  --bf-radius: 0.75rem;
+  --bf-shadow-pop: 0 12px 32px -8px rgb(11 46 111 / 0.18), 0 2px 6px -2px rgb(11 46 111 / 0.08);
+  --bf-ring: color-mix(in oklab, var(--bf-brand) 35%, transparent);
+}
+
+/* The dark set is written once and applied by two selectors. */
+:root.dark {
+  --bf-canvas: #0b1220;
+  --bf-surface: #111a2e;
+  --bf-surface-alt: #18233a;
+  --bf-ink: #f3f6fb;
+  --bf-copy: #c3cad8;
+  --bf-muted: #9aa4b8;
+  --bf-line: #1e2a42;
+  --bf-line-strong: #2c3b58;
+  --bf-brand: #1554d1;
+  --bf-brand-hover: #168fe8;
+  --bf-brand-strong: #6ea8ff;
+  --bf-brand-bg: #13264d;
+  --bf-on-brand: #ffffff;
+  --bf-accent-strong: #3dd6b5;
+  --bf-ai-strong: #a5a0ff;
+  --bf-ai-bg: #211f4a;
+  --bf-ok-bg: #11301f;
+  --bf-ok-ink: #4fd49a;
+  --bf-warn-bg: #3a2c12;
+  --bf-warn-ink: #f5c46b;
+  --bf-warn-line: #5a4319;
+  --bf-danger-bg: #3a1c20;
+  --bf-danger-ink: #f5a3a6;
+  --bf-danger-line: #5c2a2f;
+  --bf-neutral-bg: #1a2438;
+  --bf-neutral-ink: #9aa4b8;
+  --bf-chart-1: #3b7bf0;
+  --bf-chart-5: #6ea8ff;
+  --bf-shadow-pop: 0 16px 40px -8px rgb(0 0 0 / 0.55), 0 2px 6px -2px rgb(0 0 0 / 0.4);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-bf-theme="system"]:not(.light) {
+    --bf-canvas: #0b1220;
+    --bf-surface: #111a2e;
+    --bf-surface-alt: #18233a;
+    --bf-ink: #f3f6fb;
+    --bf-copy: #c3cad8;
+    --bf-muted: #9aa4b8;
+    --bf-line: #1e2a42;
+    --bf-line-strong: #2c3b58;
+    --bf-brand: #1554d1;
+    --bf-brand-hover: #168fe8;
+    --bf-brand-strong: #6ea8ff;
+    --bf-brand-bg: #13264d;
+    --bf-on-brand: #ffffff;
+    --bf-accent-strong: #3dd6b5;
+    --bf-ai-strong: #a5a0ff;
+    --bf-ai-bg: #211f4a;
+    --bf-ok-bg: #11301f;
+    --bf-ok-ink: #4fd49a;
+    --bf-warn-bg: #3a2c12;
+    --bf-warn-ink: #f5c46b;
+    --bf-warn-line: #5a4319;
+    --bf-danger-bg: #3a1c20;
+    --bf-danger-ink: #f5a3a6;
+    --bf-danger-line: #5c2a2f;
+    --bf-neutral-bg: #1a2438;
+    --bf-neutral-ink: #9aa4b8;
+    --bf-chart-1: #3b7bf0;
+    --bf-chart-5: #6ea8ff;
+    --bf-shadow-pop: 0 16px 40px -8px rgb(0 0 0 / 0.55), 0 2px 6px -2px rgb(0 0 0 / 0.4);
+  }
+}
+
+/* Numbers that line up in a column. */
+@utility bf-num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Native date inputs draw the picker icon in light chrome unless told. */
+.dark input[type="date"],
+.dark input[type="datetime-local"],
+.dark input[type="time"] {
+  color-scheme: dark;
+}
