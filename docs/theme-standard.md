@@ -33,7 +33,7 @@ A brand override must carry its own dark values, and must keep the rules below.
 
 ## Navigation progress bar
 
-`AppShell` mounts `NavProgressProvider` and puts `LinkPending` in every sidebar link, so a page load shows a 2px `--bf-brand` bar at the top of the window. The CSS is `.bf-nav-progress` in `theme.css`. Apps delete any local `.nav-progress` rules and component.
+`AppShell` mounts `NavProgressProvider` and puts `LinkPending` in every sidebar link, so a page load shows a 2px `--bf-accent` (teal) bar, the same in every product at the top of the window. The CSS is `.bf-nav-progress` in `theme.css`. Apps delete any local `.nav-progress` rules and component.
 
 ## Not in the package yet
 
