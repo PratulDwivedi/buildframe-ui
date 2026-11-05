@@ -1,5 +1,6 @@
 "use client";
 
+import { useNavProgress } from "../shell/NavProgress";
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -168,6 +169,7 @@ export function DataTable<T>({
 }: DataTableProps<T>) {
   const sizeOptions: ComboOption[] = pageSizes.map((n) => ({ value: String(n), label: String(n) }));
   const router = useRouter();
+  const { start } = useNavProgress();
   const { push, replaceAll, pending, sp, pathname } = useListUrl();
   const [search, setSearch] = React.useState(query.q);
   const activeFilters = filters.filter((f) => isActive(f, query));
@@ -266,7 +268,10 @@ export function DataTable<T>({
     if (!interactive) return;
     if ((e.target as HTMLElement).closest("a,button,input,label,textarea,[role=combobox],[data-no-row-click]")) return;
     if (onRowClick) onRowClick(row);
-    else if (rowHref) router.push(rowHref(row));
+    else if (rowHref) {
+      start();
+      router.push(rowHref(row));
+    }
   };
   const rowKeyDown = (row: T, e: React.KeyboardEvent) => {
     if (e.key === "Enter" && e.target === e.currentTarget) openRow(row, e);

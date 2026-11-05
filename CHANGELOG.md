@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0 (2026-11-05)
+
+- The navigation bar now also shows for in-page navigation, not only sidebar links: a click on any internal `<a>` under `AppShell` or `NavProgressProvider` starts it, and a change of path or query string ends it (8 second safety). Opt a link out with `data-no-progress`. New tab, download, hash-only and same-URL links are ignored.
+- `useNavProgress().start()` for code that calls `router.push` itself. `DataTable` calls it for `rowHref` rows. An `onRowClick` handler that navigates should call `start()` first.
+- Console pages need no `loading.tsx`; this bar is the loading signal.
+
 ## 0.3.0 (2026-11-05)
 
 - Navigation progress bar (from InsightUno, which had it from genfashion-app): `AppShell` now shows a 2px bar across the top while a sidebar link is loading. Colour is `--bf-accent` (teal, the logo's closing stop), identical in every product whatever its brand. No app code needed.
