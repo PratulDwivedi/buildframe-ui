@@ -46,9 +46,10 @@ a fix means tag, then bump the pin in each app.
 
 ## 5. Cross-app: page load time (in progress, 2026-11-05)
 
-- The Vercel functions run in `iad1` (Washington D.C.) and the database `buildframe_db` is in `ap-southeast-1`
-  (Singapore). Every RPC from a page is an inter-continental round trip. Fix is a function region next to the database
-  (`sin1`) for every app that reads it; none of the repos sets one.
-- Pages that call RPCs one after another (bookings: financial years, then bookings) wait twice. Merge, parallelise or
-  cache the first.
-- Details and the measured numbers go in each app's PENDING.md as they are confirmed.
+Function region is done (`sin1` in every app's vercel.json). Left:
+
+- Pages that call RPCs one after another wait twice (bookings: financial years, then bookings). Merge, parallelise or
+  cache the first, keyed by user and tenant. `fn_tripsetu_financial_years` also writes on every read (average 67 ms);
+  fixing that is a migration and needs the dry-run and "apply" routine.
+- Check the other consoles (sites, InsightUno, account) for the same waterfall.
+- Details and measured numbers go in each app's PENDING.md as they are confirmed.
