@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0 (2026-11-05)
+
+- Theme standard: `docs/theme-standard.md` says what every app takes from the package and what a product may change (the brand tokens only).
+- Contrast fixes found in an audit of the apps: `--bf-muted` and `--bf-neutral-ink` in light mode are `#5f6a7e` (were `#667085`, 4.43:1 on `surface-alt` and `neutral-bg`); `--bf-brand-hover` in dark mode is `#1a62e8` (was `#168fe8`, 3.43:1 under white button text).
+- New token `--bf-warn` (`#f5a623`, a fill for stars, ratings and markers). Class: `bg-bf-warn`, `text-bf-warn`.
+- `test/theme.test.ts` checks that 21 text pairs stay at 4.5:1 in light and dark, and that the dark set and the follow-the-device set stay identical.
+- Apps that took `#18233a` or `#0f1829` for the dark alternate surface: the package value is `#18233a`.
+- `@buildframe/ui/family.css`: the older names the InsightUno family uses (`--bg-main`, `--card-bg`, `--text-heading`, `--brand` ...), each a `var(--bf-*)` alias. An app imports it instead of keeping its own copy of the values. `test/family.test.ts` checks every alias points at a token `theme.css` defines.
+
 ## 0.1.3 (2026-10-30)
 
 - Help panel (from TripSetu): `PageHeader` takes `help`, which adds a "?" at the right end of the header opening a panel

@@ -44,6 +44,7 @@
 
   --color-bf-ok-bg: var(--bf-ok-bg);
   --color-bf-ok-ink: var(--bf-ok-ink);
+  --color-bf-warn: var(--bf-warn);
   --color-bf-warn-bg: var(--bf-warn-bg);
   --color-bf-warn-ink: var(--bf-warn-ink);
   --color-bf-warn-line: var(--bf-warn-line);
@@ -67,7 +68,7 @@
   --bf-surface-alt: #eef2f8;
   --bf-ink: #0b2e6f;
   --bf-copy: #172033;
-  --bf-muted: #667085;
+  --bf-muted: #5f6a7e;        /* 4.86:1 on surface-alt (#667085 was 4.43) */
   --bf-line: #e4e9f0;
   --bf-line-strong: #cfd7e3;
 
@@ -87,6 +88,7 @@
 
   --bf-ok-bg: #e3f6ed;
   --bf-ok-ink: #0f7a4f;
+  --bf-warn: #f5a623;         /* a FILL (stars, ratings, markers); words use warn-ink */
   --bf-warn-bg: #fef4e2;
   --bf-warn-ink: #8a5a0b;
   --bf-warn-line: #f9dca8;
@@ -95,7 +97,7 @@
   --bf-danger-ink: #b4262b;
   --bf-danger-line: #f6c6c8;
   --bf-neutral-bg: #eef2f7;
-  --bf-neutral-ink: #667085;
+  --bf-neutral-ink: #5f6a7e;  /* 4.85:1 on neutral-bg (#667085 was 4.43) */
 
   --bf-chart-1: #1554d1;
   --bf-chart-2: #08bdeb;
@@ -119,7 +121,7 @@
   --bf-line: #1e2a42;
   --bf-line-strong: #2c3b58;
   --bf-brand: #1554d1;
-  --bf-brand-hover: #168fe8;
+  --bf-brand-hover: #1a62e8;
   --bf-brand-strong: #6ea8ff;
   --bf-brand-bg: #13264d;
   --bf-on-brand: #ffffff;
@@ -152,7 +154,7 @@
     --bf-line: #1e2a42;
     --bf-line-strong: #2c3b58;
     --bf-brand: #1554d1;
-    --bf-brand-hover: #168fe8;
+    --bf-brand-hover: #1a62e8;
     --bf-brand-strong: #6ea8ff;
     --bf-brand-bg: #13264d;
     --bf-on-brand: #ffffff;

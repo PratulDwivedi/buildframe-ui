@@ -7,7 +7,7 @@ slot, and (coming) the app shell and auth forms. Plan and decisions: [docs/plan.
 ## Install
 
 ```sh
-npm install https://codeload.github.com/PratulDwivedi/buildframe-ui/tar.gz/refs/tags/v0.1.1
+npm install https://codeload.github.com/PratulDwivedi/buildframe-ui/tar.gz/refs/tags/v0.2.0
 ```
 
 Use the tarball URL, not `github:PratulDwivedi/buildframe-ui`: npm records a `github:` install as
@@ -41,6 +41,7 @@ Dark mode follows `.dark` on `<html>`. To also follow the device, put `data-bf-t
 
 Every colour is `bf-` prefixed: `bg-bf-surface`, `text-bf-muted`, `border-bf-line`, `bg-bf-brand`.
 A tenant's brand: put `brandCss({ brand, brandDark, accent })` in a `<style>` in `<head>`.
+What is standard, what a product may change, and the contrast rules: [docs/theme-standard.md](docs/theme-standard.md).
 
 ## Rules the components carry
 

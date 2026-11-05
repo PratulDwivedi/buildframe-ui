@@ -1,0 +1,55 @@
+/* ============================================================================
+   @buildframe/ui family aliases
+
+   Import after theme.css:   @import "@buildframe/ui/theme.css";
+                             @import "@buildframe/ui/family.css";
+
+   InsightUno, buildframe-account, buildframe-karaar and buildframe-website
+   all wrote their colours as --bg-main, --card-bg, --text-heading, --brand ...
+   and a copy of the values in each app's globals.css. This file keeps those
+   names and points each at the one value in theme.css, so a colour is defined
+   once. Nothing here has a value of its own.
+
+   Because every alias is a var() on :root, dark mode (`.dark`), the
+   follow-the-device set and a tenant's brandCss() override all flow through.
+
+   An app must NOT declare these names itself afterwards: a `.dark { --bg-alt }`
+   in the app's own CSS would beat the alias in dark mode.
+   ============================================================================ */
+:root {
+  --bg-main: var(--bf-canvas);
+  --bg-alt: var(--bf-surface-alt);
+  --card-bg: var(--bf-surface);
+  --text-heading: var(--bf-ink);
+  --text-body-color: var(--bf-copy);
+  --text-muted: var(--bf-muted);
+  --border-color: var(--bf-line);
+  --border-strong: var(--bf-line-strong);
+
+  --brand: var(--bf-brand);
+  --brand-hover: var(--bf-brand-hover);
+  --brand-strong: var(--bf-brand-strong);
+  --brand-bg: var(--bf-brand-bg);
+  --brand-on: var(--bf-on-brand);
+  --accent: var(--bf-accent);
+  --accent-strong: var(--bf-accent-strong);
+  --ai: var(--bf-ai);
+  --ai-strong: var(--bf-ai-strong);
+  --ai-bg: var(--bf-ai-bg);
+
+  --success-ink: var(--bf-ok-ink);
+  --warn-bg: var(--bf-warn-bg);
+  --warn-ink: var(--bf-warn-ink);
+  --warn-line: var(--bf-warn-line);
+  --danger-bg: var(--bf-danger-bg);
+  --danger-ink: var(--bf-danger-ink);
+  --danger-line: var(--bf-danger-line);
+  --neutral-bg: var(--bf-neutral-bg);
+  --neutral-ink: var(--bf-neutral-ink);
+
+  --chart-1: var(--bf-chart-1);
+  --chart-2: var(--bf-chart-2);
+  --chart-3: var(--bf-chart-3);
+  --chart-4: var(--bf-chart-4);
+  --chart-5: var(--bf-chart-5);
+}
