@@ -30,6 +30,8 @@ export { HelpSection, HelpSteps } from "./help/sections";
 // Shell
 export { PageHeaderProvider, PageHeader, PageActions, usePageHeader, usePageActionsSlot, useHasPageHeader, type PageHeaderValue } from "./shell/page-header";
 
+export { NavProgressProvider, LinkPending } from "./shell/NavProgress";
+
 // Theming
 export { brandCss, readableOn, isHex, type BrandColours } from "./lib/brand";
 export { cn } from "./lib/cn";

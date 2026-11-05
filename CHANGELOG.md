@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.0 (2026-11-05)
+
+- Navigation progress bar (from InsightUno, which had it from genfashion-app): `AppShell` now shows a 2px bar across the top while a sidebar link is loading. Colour is `--bf-brand`, so a product's brand tints it. No app code needed.
+- `NavProgressProvider` and `LinkPending` are exported for links outside the shell. An app that kept its own copy (InsightUno) deletes it, with its `.nav-progress` CSS, and drops any `badge: <LinkPending />`, which would count a link twice.
+
 ## 0.2.0 (2026-11-05)
 
 - Theme standard: `docs/theme-standard.md` says what every app takes from the package and what a product may change (the brand tokens only).

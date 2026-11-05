@@ -1,5 +1,7 @@
-import theme from "../src/theme.css?raw";
-import family from "../src/family.css?raw";
+import { readFileSync } from "node:fs";
+
+const theme = readFileSync("src/theme.css", "utf8");
+const family = readFileSync("src/family.css", "utf8");
 
 /** family.css is only aliases: every one must point at a token that theme.css really defines, and none may carry its own value. */
 const defined = new Set([...theme.matchAll(/(--bf-[\w-]+)\s*:/g)].map((m) => m[1]));

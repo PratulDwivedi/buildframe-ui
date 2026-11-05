@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { ChevronsLeftIcon, ChevronUpIcon, LogOutIcon, MenuIcon, MoonIcon, XIcon } from "lucide-react";
 import { cn } from "../lib/cn";
 import { useOutsidePress } from "../combobox/position";
+import { LinkPending, NavProgressProvider } from "./NavProgress";
 import { PageHeaderProvider, usePageActionsSlot, usePageHeader } from "./page-header";
 
 /**
@@ -156,6 +157,7 @@ export function AppShell({
 
   return (
     <SidebarCtx.Provider value={state}>
+      <NavProgressProvider>
       <PageHeaderProvider>
         <div data-bf-shell className="flex min-h-screen bg-bf-canvas text-bf-copy">
           <div
@@ -185,6 +187,7 @@ export function AppShell({
           </div>
         </div>
       </PageHeaderProvider>
+      </NavProgressProvider>
     </SidebarCtx.Provider>
   );
 }
@@ -208,6 +211,7 @@ function SidebarBody({
     <>
       <div className={cn("flex h-14 shrink-0 items-center gap-2.5 border-b border-bf-line px-4", narrow && "lg:justify-center lg:px-0")}>
         <Link href={brand.href} className="flex min-w-0 items-center gap-2.5">
+          <LinkPending />
           <span className="grid size-8 shrink-0 place-items-center">{brand.logo}</span>
           <span className={cn("min-w-0 leading-tight", narrow && "lg:hidden")}>
             <span className="block truncate text-sm font-bold tracking-tight text-bf-ink">{brand.wordmark ?? brand.name}</span>
@@ -266,6 +270,7 @@ function SidebarBody({
                         on ? "bg-bf-brand-bg font-semibold text-bf-brand-strong" : "text-bf-ink hover:bg-bf-surface-alt [&_svg]:opacity-75",
                       )}
                     >
+                      <LinkPending />
                       {it.icon}
                       <span className={cn("min-w-0 flex-1 truncate", narrow && "lg:sr-only")}>{it.label}</span>
                       {it.badge && <span className={cn("shrink-0 text-xs text-bf-muted", narrow && "lg:hidden")}>{it.badge}</span>}

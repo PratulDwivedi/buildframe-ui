@@ -7,7 +7,7 @@ slot, and (coming) the app shell and auth forms. Plan and decisions: [docs/plan.
 ## Install
 
 ```sh
-npm install https://codeload.github.com/PratulDwivedi/buildframe-ui/tar.gz/refs/tags/v0.2.0
+npm install https://codeload.github.com/PratulDwivedi/buildframe-ui/tar.gz/refs/tags/v0.3.0
 ```
 
 Use the tarball URL, not `github:PratulDwivedi/buildframe-ui`: npm records a `github:` install as

@@ -1,4 +1,6 @@
-import css from "../src/theme.css?raw";
+import { readFileSync } from "node:fs";
+
+const css = readFileSync("src/theme.css", "utf8");
 
 /**
  * Guards the standard theme (docs/theme-standard.md). Reads src/theme.css as text, so it needs no browser.
