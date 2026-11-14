@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.5.0 (2026-11-14)
+
+- `HtmlEditor`, a rich text editor, in its own entry point `@buildframe/ui/editor` (an app that does not use it does not bundle it). Built on Tiptap 3 (ProseMirror, MIT). What you see is the html that is stored.
+  - Toolbar: undo and redo, text style (the Combobox), bold, italic, underline, strikethrough, text size, colour and highlight, clear formatting, alignment, bulleted, numbered and check lists with indent, link, image, table, quote, divider, inline code, subscript and superscript.
+  - Keyboard: "/" on a line opens the insert menu; Markdown-style shortcuts ("## ", "- ", "1. ", "[ ] ", "> ", "---"); Mod+K link, Mod+F find.
+  - A bar over selected text, over a link (open, edit, remove) and over an image (alignment, width as a share of the page, description, remove).
+  - Tables: size grid, add and delete rows and columns, heading row and column, merge and split.
+  - Images three ways: uploaded through `onUploadImage`, by address, or embedded as base64 with `embedImages` (off by default, bitmap types only, shrunk to `maxEmbedBytes`). Paste and drop are simple: a copied picture or screenshot is uploaded (or embedded when there is no uploader); pictures inside text copied from a document are uploaded and the text keeps them.
+  - Find and replace, a phone-width check, an HTML view (formatted, cleaned on the way back), full screen, a status bar (where the cursor is, words, characters, reading time), read only with `disabled`.
+  - `onChange` fires for edits only, never for loading or focusing; an empty editor is `""`.
+- `sanitizeHtml` (moved from buildframe_ecomm and widened to what the editor writes: alignment, colour, highlight, size, image width and alignment, checklists; `{ dataImages: true }` keeps base64 images), `cleanStyle`, `formatHtml`, `textStats`.
+- `@buildframe/ui/rich-text.css`: `.bf-rich-text` styles the stored html on the public page exactly as in the editor. Four variables (`--bf-rich-link`, `--bf-rich-line`, `--bf-rich-muted`, `--bf-rich-soft`) point it at a page that is not on the bf palette. A checklist is stored without an `<input>`; the tick is drawn by this file.
+- `Popover`: `open` and `onOpenChange` (controlled), `role="dialog"` for a panel holding a form, and a panel with nothing focusable now closes on Escape.
+- New dependencies: `@tiptap/*` 3.34 and `@floating-ui/dom`.
+
 ## 0.4.0 (2026-11-05)
 
 - The navigation bar now also shows for in-page navigation, not only sidebar links: a click on any internal `<a>` under `AppShell` or `NavProgressProvider` starts it, and a change of path or query string ends it (8 second safety). Opt a link out with `data-no-progress`. New tab, download, hash-only and same-URL links are ignored.

@@ -1,0 +1,152 @@
+/* ============================================================================
+   @buildframe/ui rich text
+
+   Import once, after theme.css:   @import "@buildframe/ui/rich-text.css";
+
+   1. `.bf-rich-text` styles html written in HtmlEditor. The editor's writing area
+      carries the class, and so must the element that shows the stored html on the
+      public page, so what is written and what is published look the same.
+   2. `.bf-editor-*` is the editor's own furniture (cursor helpers, selections).
+
+   A page that is not on the bf-* palette (a storefront with its own theme) sets
+   the four variables below on `.bf-rich-text`.
+   ============================================================================ */
+
+.bf-rich-text {
+  --bf-rich-link: var(--bf-brand-strong);
+  --bf-rich-line: var(--bf-line-strong);
+  --bf-rich-muted: var(--bf-muted);
+  --bf-rich-soft: var(--bf-surface-alt);
+
+  line-height: 1.7;
+  font-size: 0.975rem;
+  overflow-wrap: break-word;
+}
+.bf-rich-text > * + * { margin-top: 1em; }
+.bf-rich-text h1 { font-size: 1.875rem; font-weight: 700; letter-spacing: -0.015em; line-height: 1.25; margin-top: 1.6em; }
+.bf-rich-text h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.3; margin-top: 1.6em; }
+.bf-rich-text h3 { font-size: 1.2rem; font-weight: 600; line-height: 1.35; margin-top: 1.4em; }
+.bf-rich-text h4, .bf-rich-text h5, .bf-rich-text h6 { font-weight: 600; margin-top: 1.2em; }
+.bf-rich-text strong, .bf-rich-text b { font-weight: 700; }
+.bf-rich-text a { color: var(--bf-rich-link); text-decoration: underline; text-underline-offset: 2px; }
+.bf-rich-text ul { list-style: disc; padding-left: 1.4em; }
+.bf-rich-text ol { list-style: decimal; padding-left: 1.4em; }
+.bf-rich-text li + li { margin-top: 0.35em; }
+.bf-rich-text li > ul, .bf-rich-text li > ol, .bf-rich-text li > div > ul, .bf-rich-text li > div > ol { margin-top: 0.35em; }
+.bf-rich-text blockquote { border-left: 3px solid var(--bf-rich-line); padding-left: 1em; color: var(--bf-rich-muted); }
+.bf-rich-text blockquote > * + * { margin-top: 0.6em; }
+.bf-rich-text hr { border: 0; border-top: 1px solid var(--bf-rich-line); margin: 1.6em 0; }
+.bf-rich-text small { font-size: 0.85em; }
+
+/* Highlight: the words get a dark ink, so a pale marker also reads on a dark page. */
+.bf-rich-text mark { background-color: #fef08a; color: #172033; border-radius: 0.2em; padding: 0 0.15em; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+
+.bf-rich-text code { background: var(--bf-rich-soft); border-radius: 0.3em; padding: 0.1em 0.35em; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.875em; }
+.bf-rich-text pre { background: var(--bf-rich-soft); border-radius: 0.75rem; padding: 0.9em 1.1em; overflow-x: auto; line-height: 1.55; }
+.bf-rich-text pre code { background: none; padding: 0; font-size: 0.85em; }
+
+/* Images: a width chosen in the editor is a share of the page; alignment floats the image from 480px up. */
+.bf-rich-text img { border-radius: 1rem; max-width: 100%; height: auto; }
+.bf-rich-text > img { display: block; }
+.bf-rich-text img[data-align="center"] { margin-left: auto; margin-right: auto; }
+.bf-rich-text img[data-align="right"] { margin-left: auto; }
+@media (min-width: 480px) {
+  .bf-rich-text img[data-align="left"][style*="width"] { float: left; margin: 0.25em 1.25em 0.75em 0; }
+  .bf-rich-text img[data-align="right"][style*="width"] { float: right; margin: 0.25em 0 0.75em 1.25em; }
+}
+/* On a phone a quarter-width image is a postage stamp: let small images take at least half. */
+@media (max-width: 479px) {
+  .bf-rich-text img[style*="width"] { min-width: 50%; }
+}
+.bf-rich-text::after { content: ""; display: block; clear: both; }
+.bf-rich-text h1, .bf-rich-text h2, .bf-rich-text hr, .bf-rich-text table { clear: both; }
+
+.bf-rich-text table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.bf-rich-text th, .bf-rich-text td { border: 1px solid var(--bf-rich-line); padding: 0.5em 0.75em; text-align: left; vertical-align: top; }
+.bf-rich-text th { background: var(--bf-rich-soft); font-weight: 600; }
+.bf-rich-text th > * + *, .bf-rich-text td > * + * { margin-top: 0.5em; }
+
+/* Checklist. Stored as <li data-type="taskItem" data-checked="true"><div>…</div></li>, with no <input>.
+   Selected through the list, because the item the editor draws while writing has no data-type. */
+.bf-rich-text ul[data-type="taskList"] { list-style: none; padding-left: 0; }
+.bf-rich-text ul[data-type="taskList"] > li { display: flex; align-items: flex-start; gap: 0.6em; }
+.bf-rich-text ul[data-type="taskList"] > li > div { flex: 1; min-width: 0; }
+.bf-rich-text:not(.ProseMirror) ul[data-type="taskList"] > li::before {
+  content: "";
+  flex: none;
+  width: 1.05em;
+  height: 1.05em;
+  margin-top: 0.32em;
+  border: 1.5px solid var(--bf-rich-line);
+  border-radius: 0.3em;
+}
+.bf-rich-text:not(.ProseMirror) ul[data-type="taskList"] > li[data-checked="true"]::before {
+  border-color: var(--bf-rich-link);
+  background: var(--bf-rich-link)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 8.5l3 3 6-7'/%3E%3C/svg%3E")
+    center / 85% no-repeat;
+}
+.bf-rich-text ul[data-type="taskList"] > li[data-checked="true"] > div { color: var(--bf-rich-muted); text-decoration: line-through; }
+
+/* ----------------------------------------------------------------------------
+   The editor
+   ---------------------------------------------------------------------------- */
+
+.bf-editor-content { outline: none; padding: 1.25rem; min-height: inherit; color: var(--bf-copy); caret-color: var(--bf-brand); }
+@media (min-width: 640px) {
+  .bf-editor-content { padding: 1.5rem 1.75rem; }
+}
+.bf-editor-content :is(h1, h2, h3, h4, h5, h6) { color: var(--bf-ink); }
+.bf-editor-content > :first-child { margin-top: 0; }
+.bf-editor-content ::selection { background: color-mix(in oklab, var(--bf-brand) 22%, transparent); }
+
+/* The hint in an empty editor. */
+.bf-editor-content p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: var(--bf-muted);
+}
+
+/* The checklist inside the editor has a real tick box. */
+.bf-editor-content ul[data-type="taskList"] > li > label { flex: none; margin-top: 0.3em; user-select: none; line-height: 1; }
+.bf-editor-content ul[data-type="taskList"] > li > label input { width: 1.05em; height: 1.05em; cursor: pointer; accent-color: var(--bf-brand); }
+
+/* A selected image, divider or table cell. */
+.bf-editor-content img { cursor: pointer; transition: outline-color 0.12s; outline: 2px solid transparent; outline-offset: 2px; }
+.bf-editor-content img.ProseMirror-selectednode { outline-color: var(--bf-brand); }
+.bf-editor-content hr.ProseMirror-selectednode { border-top-color: var(--bf-brand); box-shadow: 0 1px 0 var(--bf-brand); }
+.bf-editor-content .selectedCell { background: color-mix(in oklab, var(--bf-brand) 12%, transparent); }
+.bf-editor-content .tableWrapper { overflow-x: auto; margin-top: 1em; }
+.bf-editor-content .ProseMirror-gapcursor::after { border-top-color: var(--bf-brand); }
+
+/* The selection, still shown while a panel has the focus. */
+.bf-editor-content .bf-kept-selection { background: color-mix(in oklab, var(--bf-brand) 22%, transparent); }
+
+/* Find: every match, and the one the arrows are on. */
+.bf-editor-content .bf-find { background: #fde68a; color: #172033; border-radius: 0.15em; }
+.bf-editor-content .bf-find-current { background: #fb923c; }
+
+/* The floating bars over a selection, a link or an image. */
+.bf-editor-bubble {
+  /* Fixed from the start: the bar is measured before it is placed, and must be measured as it will sit. */
+  position: fixed !important;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+  max-width: calc(100vw - 16px);
+  overflow-x: auto;
+  scrollbar-width: none;
+  border: 1px solid var(--bf-line);
+  border-radius: 0.75rem;
+  background: var(--bf-surface);
+  padding: 0.25rem;
+  box-shadow: var(--bf-shadow-pop);
+}
+.bf-editor-bubble::-webkit-scrollbar { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .bf-editor-content img { transition: none; }
+}

@@ -1,6 +1,6 @@
 # buildframe-ui: pending plan
 
-Updated 2026-11-05. This file lists only what is still to do. What is built is in CHANGELOG.md (current version 0.4.0),
+Updated 2026-11-14. This file lists only what is still to do. What is built is in CHANGELOG.md (current version 0.5.0),
 the colour and theme rules are in docs/theme-standard.md.
 
 Standing rules for every item below: public repo, nothing product specific, no keys or client names in the package;

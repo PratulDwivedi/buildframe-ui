@@ -17,7 +17,15 @@ export function Popover({
   label,
   children,
   className,
+  open: openProp,
+  onOpenChange,
+  role = "menu",
 }: {
+  /** Controlled: the panel is open when true. Leave out and the button toggles it. */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  /** "dialog" for a panel holding a small form rather than a list of actions. */
+  role?: "menu" | "dialog";
   /** Renders the button. Spread the props onto it. */
   trigger: (props: { ref: React.Ref<HTMLButtonElement>; onClick: () => void; "aria-expanded": boolean; "aria-haspopup": "menu" | "dialog" }) => React.ReactNode;
   align?: "start" | "end";
@@ -27,7 +35,15 @@ export function Popover({
   children: React.ReactNode | ((close: () => void) => React.ReactNode);
   className?: string;
 }) {
-  const [open, setOpen] = React.useState(false);
+  const [inner, setInner] = React.useState(false);
+  const open = openProp ?? inner;
+  const setOpen = React.useCallback(
+    (next: boolean) => {
+      setInner(next);
+      onOpenChange?.(next);
+    },
+    [onOpenChange],
+  );
   const btn = React.useRef<HTMLButtonElement>(null);
   const panel = React.useRef<HTMLDivElement>(null);
   const [pos, setPos] = React.useState<{ top: number; left: number } | null>(null);
@@ -35,7 +51,7 @@ export function Popover({
   const close = React.useCallback(() => {
     setOpen(false);
     btn.current?.focus();
-  }, []);
+  }, [setOpen]);
   useOutsidePress(open, [btn, panel], () => setOpen(false));
 
   React.useLayoutEffect(() => {
@@ -57,7 +73,8 @@ export function Popover({
   }, [open, align, width]);
 
   React.useEffect(() => {
-    if (open) panel.current?.querySelector<HTMLElement>('[role="menuitem"],[role="menuitemcheckbox"],input,button')?.focus();
+    // A panel with nothing to focus (plain text) takes the focus itself, so Escape still closes it.
+    if (open) (panel.current?.querySelector<HTMLElement>('[role="menuitem"],[role="menuitemcheckbox"],input,button') ?? panel.current)?.focus();
   }, [open, pos]);
 
   function onKey(e: React.KeyboardEvent) {
@@ -78,17 +95,18 @@ export function Popover({
 
   return (
     <>
-      {trigger({ ref: btn, onClick: () => setOpen((o) => !o), "aria-expanded": open, "aria-haspopup": "menu" })}
+      {trigger({ ref: btn, onClick: () => setOpen(!open), "aria-expanded": open, "aria-haspopup": role })}
       {open &&
         pos &&
         createPortal(
           <div
             ref={panel}
-            role="menu"
+            role={role}
+            tabIndex={-1}
             aria-label={label}
             onKeyDown={onKey}
             style={{ position: "fixed", top: pos.top, left: pos.left, width: Math.min(width, window.innerWidth - 16) }}
-            className={cn("z-[80] rounded-xl border border-bf-line bg-bf-surface p-1 text-sm text-bf-copy shadow-[var(--bf-shadow-pop)]", className)}
+            className={cn("z-[80] rounded-xl border border-bf-line bg-bf-surface p-1 text-sm text-bf-copy shadow-[var(--bf-shadow-pop)] outline-none", className)}
           >
             {typeof children === "function" ? children(close) : children}
           </div>,
