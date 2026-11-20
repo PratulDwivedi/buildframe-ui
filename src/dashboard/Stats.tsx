@@ -69,6 +69,7 @@ export function StatTile({
   change,
   foot,
   tone = "brand",
+  layout = "stacked",
   href,
   className,
 }: {
@@ -83,38 +84,69 @@ export function StatTile({
   change?: { now: number; before: number; upIsGood?: boolean };
   foot?: React.ReactNode;
   tone?: StatTone;
+  /**
+   * "stacked" (default): icon and title, then the number, then the subtitle, one under the other.
+   * "inline": the icon at the left, the title above, and the number and subtitle on one line beside it. About half
+   * the height, for a row of tiles on a dashboard; the subtitle wraps under the number when the tile is narrow.
+   */
+  layout?: "stacked" | "inline";
   href?: string;
   className?: string;
 }) {
-  const body = (
+  const inline = layout === "inline";
+  const sub = subtitle ? (
+    <p className={cn("flex items-center gap-1 text-xs", inline ? "min-w-0" : "mt-1", subTones[subTone])}>
+      {subIcon && (
+        <span aria-hidden className="shrink-0 [&_svg]:size-3.5">
+          {subIcon}
+        </span>
+      )}
+      <span>{subtitle}</span>
+    </p>
+  ) : null;
+  const extras = (
+    <>
+      {change && <Change className="mt-1" {...change} />}
+      {foot && <p className="mt-1 text-xs text-bf-muted">{foot}</p>}
+    </>
+  );
+
+  const body = inline ? (
+    <div className="flex items-center gap-3">
+      {icon && <span className={cn("grid size-10 shrink-0 place-items-center rounded-xl [&_svg]:size-5", iconTones[tone])}>{icon}</span>}
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-[13px] font-medium text-bf-muted">{label}</p>
+        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+          <span className="text-2xl font-semibold leading-tight tabular-nums text-bf-ink">{value}</span>
+          {sub}
+        </div>
+        {extras}
+      </div>
+    </div>
+  ) : (
     <>
       <div className="flex items-center gap-2.5">
         {icon && <span className={cn("grid size-8 shrink-0 place-items-center rounded-lg [&_svg]:size-4", iconTones[tone])}>{icon}</span>}
         <span className="text-[13px] font-medium text-bf-muted">{label}</span>
       </div>
       <p className="mt-3 text-2xl font-semibold tabular-nums text-bf-ink">{value}</p>
-      {subtitle && (
-        <p className={cn("mt-1 flex items-center gap-1 text-xs", subTones[subTone])}>
-          {subIcon && (
-            <span aria-hidden className="shrink-0 [&_svg]:size-3.5">
-              {subIcon}
-            </span>
-          )}
-          <span>{subtitle}</span>
-        </p>
-      )}
-      {change && <Change className="mt-1" {...change} />}
-      {foot && <p className="mt-1 text-xs text-bf-muted">{foot}</p>}
+      {sub}
+      {extras}
     </>
   );
+  const pad = inline ? "p-3.5" : "p-4";
   if (href) {
     return (
-      <a href={href} className={cn("block rounded-2xl border border-bf-line bg-bf-surface p-4 transition-colors hover:border-bf-line-strong", className)}>
+      <a href={href} data-layout={layout} className={cn("block rounded-2xl border border-bf-line bg-bf-surface transition-colors hover:border-bf-line-strong", pad, className)}>
         {body}
       </a>
     );
   }
-  return <Card className={cn("p-4", className)}>{body}</Card>;
+  return (
+    <Card data-layout={layout} className={cn(pad, className)}>
+      {body}
+    </Card>
+  );
 }
 
 /** A titled card for a dashboard section, with an optional action (a link) on the right of the title. */

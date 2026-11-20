@@ -103,3 +103,31 @@ it("a stat tile that is a link still shows its subtitle", () => {
   render(<StatTile label="Open" value="7" href="/app/items" subtitle="3 due this week" subIcon={<svg />} />);
   expect(within(screen.getByRole("link")).getByText("3 due this week")).toBeInTheDocument();
 });
+
+it("the inline layout puts the number and the subtitle on one line, beside the icon, to save height", () => {
+  const { container } = render(
+    <StatTile layout="inline" icon={<svg data-testid="tile-icon" />} label="Overdue" value="2" subtitle="Since Monday" subIcon={<svg />} subTone="bad" />,
+  );
+  const root = container.firstElementChild as HTMLElement;
+  expect(root.getAttribute("data-layout")).toBe("inline");
+  const value = screen.getByText("2");
+  const subtitle = screen.getByText("Since Monday").closest("p")!;
+  // the number and the subtitle share one row, and that row is not the card itself
+  expect(value.parentElement).toBe(subtitle.parentElement);
+  expect(value.parentElement).not.toBe(root);
+  // the icon is beside the text, in the same top row as the title
+  expect(screen.getByTestId("tile-icon").closest("span")!.parentElement).toBe(screen.getByText("Overdue").closest("div")!.parentElement);
+  expect(subtitle.className).toContain("text-bf-danger-ink");
+});
+
+it("the inline layout keeps a change line and a footnote under the row, and still links", () => {
+  render(<StatTile layout="inline" label="Members" value="4" href="/admin/members" change={{ now: 4, before: 2 }} foot="Two invited" />);
+  const link = screen.getByRole("link");
+  expect(within(link).getByText(/100% vs the period before/)).toBeTruthy();
+  expect(within(link).getByText("Two invited")).toBeTruthy();
+});
+
+it("the default layout is unchanged: stacked", () => {
+  const { container } = render(<StatTile label="Members" value="4" />);
+  expect((container.firstElementChild as HTMLElement).getAttribute("data-layout")).toBe("stacked");
+});
