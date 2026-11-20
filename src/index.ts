@@ -2,6 +2,15 @@
 export { Button, ButtonLink, IconButton, buttonClass, type ButtonSize, type ButtonVariant } from "./primitives/Button";
 export { Input, Textarea, Label, Field, FormError, FormNotice, Checkbox, inputClass } from "./primitives/Field";
 export { StatusPill, Skeleton, EmptyState, Card, type Tone } from "./primitives/Status";
+export { ProgressBar, type ProgressTone } from "./primitives/Progress";
+
+// People
+export { Avatar, AvatarStack, type AvatarSize } from "./people/Avatar";
+export type { AvatarUser } from "./people/initials";
+
+// Tabs and feeds
+export { Tabs, TabPanels, type TabItem } from "./nav/Tabs";
+export { Feed, type FeedItem } from "./feed/Feed";
 
 // Dropdowns
 export { Combobox, type ComboOption, type ComboSize } from "./combobox/Combobox";
@@ -34,6 +43,9 @@ export { NavProgressProvider, LinkPending, useNavProgress } from "./shell/NavPro
 
 // Theming
 export { brandCss, readableOn, isHex, type BrandColours } from "./lib/brand";
+export { CATEGORY_COUNT, categoryOf, categoryStyle } from "./lib/category";
+export { useThemeToggle } from "./theme/useThemeToggle";
+export { themeInitScript } from "./theme/init";
 export { cn } from "./lib/cn";
 export { AppShell, ProfileMenu, useSidebar, activeHref, initials, type NavGroup, type NavItem, type ProfileLink, type ShellUser } from "./shell/AppShell";
 

@@ -8,6 +8,9 @@ import { cn } from "../lib/cn";
 import { useOutsidePress } from "../combobox/position";
 import { LinkPending, NavProgressProvider } from "./NavProgress";
 import { PageHeaderProvider, usePageActionsSlot, usePageHeader } from "./page-header";
+import { Avatar } from "../people/Avatar";
+
+export { initials } from "../people/initials";
 
 /**
  * The console frame every Buildframe product shares: a sidebar of grouped links with the account menu at its
@@ -62,18 +65,6 @@ export function activeHref(path: string, groups: NavGroup[]): string | undefined
       return it.exact ? path === it.href : path === base || path.startsWith(`${base}/`) || path === it.href;
     })
     .sort((a, b) => (b.match ?? b.href).length - (a.match ?? a.href).length)[0]?.href;
-}
-
-/** From the name, else from the email's local part ("hello+admin@x" -> "HA"), never from the domain. */
-export function initials(user: ShellUser): string {
-  return (
-    (user.name?.trim() || user.email?.split("@")[0] || "?")
-      .split(/[\s+._-]+/)
-      .filter(Boolean)
-      .slice(0, 2)
-      .map((w) => w[0]!.toUpperCase())
-      .join("") || "?"
-  );
 }
 
 export function AppShell({
@@ -314,14 +305,6 @@ function Topbar({ fallbackTitle }: { fallbackTitle: string }) {
 
 const ITEM = "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm text-bf-ink transition-colors hover:bg-bf-surface-alt focus-visible:bg-bf-surface-alt outline-none [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-bf-muted";
 
-function Avatar({ user, size }: { user: ShellUser; size: string }) {
-  if (user.avatar) {
-    // eslint-disable-next-line @next/next/no-img-element
-    return <img src={user.avatar} alt="" className={cn("shrink-0 rounded-full object-cover", size)} />;
-  }
-  return <span className={cn("grid shrink-0 place-items-center rounded-full bg-bf-brand-bg text-[11px] font-semibold text-bf-brand-strong", size)}>{initials(user)}</span>;
-}
-
 /** The account menu at the sidebar's foot. Opens upward; outside click or Escape closes it. */
 export function ProfileMenu({
   user,
@@ -360,7 +343,7 @@ export function ProfileMenu({
       {open && (
         <div role="menu" aria-label="Account" className="absolute bottom-full left-0 z-20 mb-2 w-[248px] overflow-hidden rounded-xl border border-bf-line bg-bf-surface shadow-[var(--bf-shadow-pop)]">
           <div className="flex items-center gap-2.5 border-b border-bf-line px-3.5 py-3">
-            <Avatar user={user} size="size-9" />
+            <Avatar user={user} colour="brand" decorative className="size-9" />
             <div className="min-w-0 flex-1 leading-tight">
               <p className="truncate text-[13px] font-semibold text-bf-ink">{shown}</p>
               {user.email && <p className="truncate text-[11px] text-bf-muted">{user.email}</p>}
@@ -423,7 +406,7 @@ export function ProfileMenu({
         aria-label={narrow ? "Account menu" : undefined}
         className={cn("flex w-full items-center gap-2.5 rounded-lg px-2 py-1.5 text-left transition-colors", open ? "bg-bf-surface-alt" : "hover:bg-bf-surface-alt", narrow && "lg:justify-center lg:px-0")}
       >
-        <Avatar user={user} size="size-8" />
+        <Avatar user={user} colour="brand" decorative />
         <span className={cn("min-w-0 flex-1 leading-tight", narrow && "lg:hidden")}>
           <span className="block truncate text-[13px] font-semibold text-bf-ink">{shown}</span>
           {user.email && <span className="block truncate text-[11px] text-bf-muted">{user.email}</span>}

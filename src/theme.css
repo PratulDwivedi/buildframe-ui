@@ -105,6 +105,16 @@
   --bf-chart-4: #6c63e8;
   --bf-chart-5: #168fe8;
 
+  /* Category colours: identity, not meaning (a person's avatar, a project's mark). A soft background and its text
+     colour, six of them. No violet (the assistant's) and no brand blue. Pick one with categoryOf(), apply with
+     categoryStyle(). Charts keep the chart tokens. */
+  --bf-cat-1-bg: #fde8ef;  --bf-cat-1-ink: #a61e4d;
+  --bf-cat-2-bg: #fdebd8;  --bf-cat-2-ink: #8f4a0b;
+  --bf-cat-3-bg: #e6f4d7;  --bf-cat-3-ink: #3f6212;
+  --bf-cat-4-bg: #d9f3f5;  --bf-cat-4-ink: #0b6570;
+  --bf-cat-5-bg: #efe7df;  --bf-cat-5-ink: #6b4423;
+  --bf-cat-6-bg: #e5e9f0;  --bf-cat-6-ink: #3d4a60;
+
   --bf-radius: 0.75rem;
   --bf-shadow-pop: 0 12px 32px -8px rgb(11 46 111 / 0.18), 0 2px 6px -2px rgb(11 46 111 / 0.08);
   --bf-ring: color-mix(in oklab, var(--bf-brand) 35%, transparent);
@@ -140,6 +150,18 @@
   --bf-neutral-ink: #9aa4b8;
   --bf-chart-1: #3b7bf0;
   --bf-chart-5: #6ea8ff;
+  --bf-cat-1-bg: #3d1a27;
+  --bf-cat-1-ink: #f7a8c0;
+  --bf-cat-2-bg: #3a2613;
+  --bf-cat-2-ink: #f5b97a;
+  --bf-cat-3-bg: #23331a;
+  --bf-cat-3-ink: #b5dd85;
+  --bf-cat-4-bg: #12333a;
+  --bf-cat-4-ink: #7fd6e0;
+  --bf-cat-5-bg: #33291f;
+  --bf-cat-5-ink: #d9b99a;
+  --bf-cat-6-bg: #242d3d;
+  --bf-cat-6-ink: #b8c3d6;
   --bf-shadow-pop: 0 16px 40px -8px rgb(0 0 0 / 0.55), 0 2px 6px -2px rgb(0 0 0 / 0.4);
 }
 
@@ -173,6 +195,18 @@
     --bf-neutral-ink: #9aa4b8;
     --bf-chart-1: #3b7bf0;
     --bf-chart-5: #6ea8ff;
+    --bf-cat-1-bg: #3d1a27;
+    --bf-cat-1-ink: #f7a8c0;
+    --bf-cat-2-bg: #3a2613;
+    --bf-cat-2-ink: #f5b97a;
+    --bf-cat-3-bg: #23331a;
+    --bf-cat-3-ink: #b5dd85;
+    --bf-cat-4-bg: #12333a;
+    --bf-cat-4-ink: #7fd6e0;
+    --bf-cat-5-bg: #33291f;
+    --bf-cat-5-ink: #d9b99a;
+    --bf-cat-6-bg: #242d3d;
+    --bf-cat-6-ink: #b8c3d6;
     --bf-shadow-pop: 0 16px 40px -8px rgb(0 0 0 / 0.55), 0 2px 6px -2px rgb(0 0 0 / 0.4);
   }
 }

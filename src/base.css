@@ -1,0 +1,47 @@
+/* ============================================================================
+   @buildframe/ui base rules (optional)
+
+   Import after theme.css:   @import "tailwindcss";
+                             @import "@buildframe/ui/theme.css";
+                             @import "@buildframe/ui/base.css";
+
+   The base element rules every Buildframe app used to carry its own copy of: the page's colours, the family's
+   type (Plus Jakarta Sans for body, Space Grotesk 700 for headings), a pointer on things that can be pressed,
+   and reduced motion.
+
+   Fonts are still LOADED by the app, with next/font, under these variable names:
+     --font-jakarta (body), --font-grotesk (headings), --font-mono-code (optional, code and keys)
+   This file only maps them. An app that sets none of them falls back to the system fonts.
+   ============================================================================ */
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-code), ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@layer base {
+  body {
+    background: var(--bf-canvas);
+    color: var(--bf-copy);
+    font-family: var(--font-sans);
+  }
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--bf-ink);
+  }
+  button:not(:disabled), [role="button"], [role="tab"], summary {
+    cursor: pointer;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

@@ -54,7 +54,19 @@ const TEXT_PAIRS: Array<[string, string]> = [
   ["ai-strong", "canvas"], ["ai-strong", "ai-bg"],
   ["ok-ink", "canvas"], ["ok-ink", "ok-bg"],
   ["warn-ink", "warn-bg"], ["danger-ink", "danger-bg"], ["neutral-ink", "neutral-bg"],
+  // Category colours (people, projects): each ink on its own soft background.
+  ["cat-1-ink", "cat-1-bg"], ["cat-2-ink", "cat-2-bg"], ["cat-3-ink", "cat-3-bg"],
+  ["cat-4-ink", "cat-4-bg"], ["cat-5-ink", "cat-5-bg"], ["cat-6-ink", "cat-6-bg"],
 ];
+
+it("keeps the category colours clear of the assistant's violet and the brand blue", () => {
+  const reserved = [light["--bf-ai"], light["--bf-ai-strong"], light["--bf-brand"], light["--bf-chart-4"]].map((c) => c.toLowerCase());
+  for (let n = 1; n <= 6; n++) {
+    for (const part of ["bg", "ink"]) {
+      for (const set of [light, dark]) expect(reserved).not.toContain(set[`--bf-cat-${n}-${part}`]?.toLowerCase());
+    }
+  }
+});
 
 describe.each([
   ["light", light],
