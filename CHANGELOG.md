@@ -2,7 +2,7 @@
 
 ## 0.7.1 (2026-11-20)
 
-- `StatTile` (the shared stats card) gains `subtitle`, `subIcon` and `subTone`: a line under the number with its own small icon, muted by default or coloured ok, warn, bad or brand ("3 due this week" with a clock, "2 late" in red with an alert). Icon, title (`label`), number (`value`), `tone`, `change`, `foot` and `href` are as before, so existing uses are unchanged. New `layout="inline"`: the icon at the left, the title above, and the number and subtitle on one line beside it, about half the height of the default `"stacked"`, for a row of tiles on a dashboard (the subtitle wraps under the number on a narrow tile).
+- `StatTile` (the shared stats card) gains `subtitle`, `subIcon` and `subTone`: a line under the number with its own small icon, muted by default or coloured ok, warn, bad or brand ("3 due this week" with a clock, "2 late" in red with an alert). Icon, title (`label`), number (`value`), `tone`, `change`, `foot` and `href` are as before, so existing uses are unchanged. New `layout="inline"`: the icon at the left, the title above, and the number and subtitle on one line beside it, about half the height of the default `"stacked"`, for a row of tiles on a dashboard (the subtitle wraps under the number on a narrow tile). Also `layout="corner"` (title and a large number at the left, the icon in the top-right corner, the subtitle underneath) and `layout="accent"` (no icon tile: a coloured edge and a small icon before the title; the densest).
 - `Board`: screen reader announcements in plain words ("Picked up WEB-149, position 1 of 4 in To do", "Dropped it in In progress, position 2 of 3") and instructions that point to the card's Move button, instead of dnd-kit's default that names ids.
 
 ## 0.7.0 (2026-11-20)

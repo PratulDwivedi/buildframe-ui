@@ -34,6 +34,7 @@ export function Change({ now, before, upIsGood = true, className }: { now: numbe
   );
 }
 
+export type StatLayout = "stacked" | "inline" | "corner" | "accent";
 export type StatTone = "brand" | "ok" | "warn" | "bad" | "ai" | "off";
 const iconTones: Record<StatTone, string> = {
   brand: "bg-bf-brand-bg text-bf-brand-strong",
@@ -46,6 +47,15 @@ const iconTones: Record<StatTone, string> = {
 
 /** The subtitle line's colour: muted for a plain note, or a status colour when the note is good or bad news. */
 export type StatSubTone = "muted" | "brand" | "ok" | "warn" | "bad";
+/** The colour of the accent layout's edge: the tone's text colour, drawn as a bar with bg-current. */
+const accentTones: Record<StatTone, string> = {
+  brand: "text-bf-brand-strong",
+  ok: "text-bf-ok-ink",
+  warn: "text-bf-warn-ink",
+  bad: "text-bf-danger-ink",
+  ai: "text-bf-ai-strong",
+  off: "text-bf-neutral-ink",
+};
 const subTones: Record<StatSubTone, string> = {
   muted: "text-bf-muted",
   brand: "text-bf-brand-strong",
@@ -88,12 +98,14 @@ export function StatTile({
    * "stacked" (default): icon and title, then the number, then the subtitle, one under the other.
    * "inline": the icon at the left, the title above, and the number and subtitle on one line beside it. About half
    * the height, for a row of tiles on a dashboard; the subtitle wraps under the number when the tile is narrow.
+   * "corner": the title and a large number at the left, the icon in the top-right corner, the subtitle underneath.
+   * "accent": no icon tile; a coloured bar down the left edge and the icon small, before the title. The densest.
    */
-  layout?: "stacked" | "inline";
+  layout?: StatLayout;
   href?: string;
   className?: string;
 }) {
-  const inline = layout === "inline";
+  const inline = layout === "inline" || layout === "accent";
   const sub = subtitle ? (
     <p className={cn("flex items-center gap-1 text-xs", inline ? "min-w-0" : "mt-1", subTones[subTone])}>
       {subIcon && (
@@ -111,29 +123,69 @@ export function StatTile({
     </>
   );
 
-  const body = inline ? (
-    <div className="flex items-center gap-3">
-      {icon && <span className={cn("grid size-10 shrink-0 place-items-center rounded-xl [&_svg]:size-5", iconTones[tone])}>{icon}</span>}
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-[13px] font-medium text-bf-muted">{label}</p>
-        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-          <span className="text-2xl font-semibold leading-tight tabular-nums text-bf-ink">{value}</span>
-          {sub}
+  let body: React.ReactNode;
+  if (layout === "inline") {
+    body = (
+      <div className="flex items-center gap-3">
+        {icon && <span className={cn("grid size-10 shrink-0 place-items-center rounded-xl [&_svg]:size-5", iconTones[tone])}>{icon}</span>}
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-[13px] font-medium text-bf-muted">{label}</p>
+          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+            <span className="text-2xl font-semibold leading-tight tabular-nums text-bf-ink">{value}</span>
+            {sub}
+          </div>
+          {extras}
         </div>
+      </div>
+    );
+  } else if (layout === "corner") {
+    body = (
+      <>
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <p className="truncate text-[13px] font-medium text-bf-muted">{label}</p>
+            <p className="mt-1 text-3xl font-semibold leading-none tabular-nums text-bf-ink">{value}</p>
+          </div>
+          {icon && <span className={cn("grid size-9 shrink-0 place-items-center rounded-xl [&_svg]:size-[18px]", iconTones[tone])}>{icon}</span>}
+        </div>
+        {sub && <div className="mt-2.5">{sub}</div>}
         {extras}
+      </>
+    );
+  } else if (layout === "accent") {
+    body = (
+      <div className="flex gap-3">
+        <span data-accent aria-hidden className={cn("w-1 shrink-0 self-stretch rounded-full bg-current", accentTones[tone])} />
+        <div className="min-w-0 flex-1">
+          <p className="flex items-center gap-1.5 text-[13px] font-medium text-bf-muted">
+            {icon && (
+              <span aria-hidden className={cn("shrink-0 [&_svg]:size-3.5", accentTones[tone])}>
+                {icon}
+              </span>
+            )}
+            <span className="truncate">{label}</span>
+          </p>
+          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+            <span className="text-2xl font-semibold leading-tight tabular-nums text-bf-ink">{value}</span>
+            {sub}
+          </div>
+          {extras}
+        </div>
       </div>
-    </div>
-  ) : (
-    <>
-      <div className="flex items-center gap-2.5">
-        {icon && <span className={cn("grid size-8 shrink-0 place-items-center rounded-lg [&_svg]:size-4", iconTones[tone])}>{icon}</span>}
-        <span className="text-[13px] font-medium text-bf-muted">{label}</span>
-      </div>
-      <p className="mt-3 text-2xl font-semibold tabular-nums text-bf-ink">{value}</p>
-      {sub}
-      {extras}
-    </>
-  );
+    );
+  } else {
+    body = (
+      <>
+        <div className="flex items-center gap-2.5">
+          {icon && <span className={cn("grid size-8 shrink-0 place-items-center rounded-lg [&_svg]:size-4", iconTones[tone])}>{icon}</span>}
+          <span className="text-[13px] font-medium text-bf-muted">{label}</span>
+        </div>
+        <p className="mt-3 text-2xl font-semibold tabular-nums text-bf-ink">{value}</p>
+        {sub}
+        {extras}
+      </>
+    );
+  }
   const pad = inline ? "p-3.5" : "p-4";
   if (href) {
     return (

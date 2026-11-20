@@ -29,7 +29,7 @@ export * from "./data/list";
 export type { ViewPrefs, SavedView, Density, Layout } from "./data/prefs";
 
 // Dashboards
-export { StatTile, DashCard, Change, BarSeries, ShareBars, PeriodSwitch, type StatTone, type StatSubTone, type BarKey } from "./dashboard/Stats";
+export { StatTile, DashCard, Change, BarSeries, ShareBars, PeriodSwitch, type StatTone, type StatSubTone, type StatLayout, type BarKey } from "./dashboard/Stats";
 export { periodChange, bucketSeries, pickPeriod, type PeriodChange, type SeriesPoint } from "./dashboard/series";
 
 // Help panel (the "?" at the right end of a page header)

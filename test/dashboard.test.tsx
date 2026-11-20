@@ -131,3 +131,37 @@ it("the default layout is unchanged: stacked", () => {
   const { container } = render(<StatTile label="Members" value="4" />);
   expect((container.firstElementChild as HTMLElement).getAttribute("data-layout")).toBe("stacked");
 });
+
+it("the corner layout puts the icon in the top-right corner, level with the title, and the subtitle under the number", () => {
+  const { container } = render(<StatTile layout="corner" icon={<svg data-testid="corner-icon" />} label="Overdue" value="2" subtitle="Since Monday" />);
+  expect((container.firstElementChild as HTMLElement).getAttribute("data-layout")).toBe("corner");
+  const iconTile = screen.getByTestId("corner-icon").closest("span")!;
+  const title = screen.getByText("Overdue");
+  // the title and the icon are in the same top row; the icon comes after the text block
+  expect(iconTile.parentElement).toBe(title.closest("div")!.parentElement);
+  expect(title.closest("div")!.compareDocumentPosition(iconTile) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  // the subtitle is below that row, not inside it
+  expect(iconTile.parentElement!.contains(screen.getByText("Since Monday"))).toBe(false);
+});
+
+it("the accent layout has a coloured edge instead of an icon tile, and a small icon before the title", () => {
+  const { container } = render(<StatTile layout="accent" tone="bad" icon={<svg data-testid="small-icon" />} label="Overdue" value="2" subtitle="Since Monday" />);
+  const root = container.firstElementChild as HTMLElement;
+  expect(root.getAttribute("data-layout")).toBe("accent");
+  const bar = root.querySelector("[data-accent]") as HTMLElement;
+  expect(bar).not.toBeNull();
+  expect(bar.className).toContain("text-bf-danger-ink");
+  expect(bar.getAttribute("aria-hidden")).toBe("true");
+  // no tinted square tile: the icon sits in the title line
+  expect(screen.getByTestId("small-icon").closest("p")).toBe(screen.getByText("Overdue").closest("p"));
+});
+
+it("every layout shows the title, the number and the subtitle", () => {
+  for (const layout of ["stacked", "inline", "corner", "accent"] as const) {
+    const { unmount } = render(<StatTile layout={layout} label="Open" value="7" subtitle="3 due" />);
+    expect(screen.getByText("Open")).toBeTruthy();
+    expect(screen.getByText("7")).toBeTruthy();
+    expect(screen.getByText("3 due")).toBeTruthy();
+    unmount();
+  }
+});
