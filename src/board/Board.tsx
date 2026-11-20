@@ -17,6 +17,7 @@ import { EllipsisIcon, GripVerticalIcon } from "lucide-react";
 import { cn } from "../lib/cn";
 import { Tabs } from "../nav/Tabs";
 import { MenuItem, MenuLabel, Popover } from "../overlay/Menu";
+import { boardAnnouncements } from "./announce";
 import type { BoardItem } from "./moveItem";
 
 /**
@@ -85,7 +86,17 @@ export function Board<T extends BoardItem>({ label, columns, items, renderCard, 
         onChange={setPhoneColumn}
         items={columns.map((c) => ({ key: c.id, label: c.title, count: inColumn(c.id).length }))}
       />
-      <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={onDragEnd}>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCorners}
+        onDragEnd={onDragEnd}
+        accessibility={{
+          announcements: boardAnnouncements(items, columns, cardName),
+          screenReaderInstructions: {
+            draggable: "To pick up a card, press space or enter. Use the arrow keys to move it, space or enter to drop it, escape to cancel. Or use the card's Move button.",
+          },
+        }}
+      >
         <div className="flex gap-3 sm:items-start sm:overflow-x-auto sm:pb-2">
           {columns.map((c) => (
             <Column

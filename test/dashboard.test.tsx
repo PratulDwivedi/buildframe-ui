@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
 import { bucketSeries, periodChange, pickPeriod } from "../src/dashboard/series";
@@ -73,4 +73,33 @@ it("switches the period in the URL, leaving the default out", async () => {
   expect(push).toHaveBeenLastCalledWith("/admin?tab=x&days=90");
   await userEvent.click(screen.getByRole("button", { name: "30 days" }));
   expect(push).toHaveBeenLastCalledWith("/admin?tab=x");
+});
+
+it("a stat tile can carry a subtitle with a small icon beside it", () => {
+  render(<StatTile label="Overdue" value="2" subtitle="Since Monday" subIcon={<svg data-testid="sub-icon" />} />);
+  expect(screen.getByText("Since Monday")).toBeInTheDocument();
+  const icon = screen.getByTestId("sub-icon");
+  expect(icon.closest("[aria-hidden]")).not.toBeNull();
+  expect(icon.closest("p")).toBe(screen.getByText("Since Monday").closest("p"));
+});
+
+it("colours the subtitle line by its tone, muted by default", () => {
+  const { rerender } = render(<StatTile label="Overdue" value="2" subtitle="Late" />);
+  expect(screen.getByText("Late").closest("p")!.className).toContain("text-bf-muted");
+  rerender(<StatTile label="Overdue" value="2" subtitle="Late" subTone="bad" />);
+  expect(screen.getByText("Late").closest("p")!.className).toContain("text-bf-danger-ink");
+  rerender(<StatTile label="Done" value="9" subtitle="On track" subTone="ok" />);
+  expect(screen.getByText("On track").closest("p")!.className).toContain("text-bf-ok-ink");
+});
+
+it("draws no subtitle line when there is none, and keeps the footnote working", () => {
+  const { container, rerender } = render(<StatTile label="Members" value="4" />);
+  expect(container.querySelectorAll("p")).toHaveLength(1);
+  rerender(<StatTile label="Members" value="4" foot="Two invited" />);
+  expect(screen.getByText("Two invited")).toBeInTheDocument();
+});
+
+it("a stat tile that is a link still shows its subtitle", () => {
+  render(<StatTile label="Open" value="7" href="/app/items" subtitle="3 due this week" subIcon={<svg />} />);
+  expect(within(screen.getByRole("link")).getByText("3 due this week")).toBeInTheDocument();
 });

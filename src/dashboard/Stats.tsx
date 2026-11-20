@@ -44,11 +44,28 @@ const iconTones: Record<StatTone, string> = {
   off: "bg-bf-neutral-bg text-bf-neutral-ink",
 };
 
-/** One figure: an icon, its label, the value, then a change line or a footnote (or both). `href` makes it a link. */
+/** The subtitle line's colour: muted for a plain note, or a status colour when the note is good or bad news. */
+export type StatSubTone = "muted" | "brand" | "ok" | "warn" | "bad";
+const subTones: Record<StatSubTone, string> = {
+  muted: "text-bf-muted",
+  brand: "text-bf-brand-strong",
+  ok: "text-bf-ok-ink",
+  warn: "text-bf-warn-ink",
+  bad: "text-bf-danger-ink",
+};
+
+/**
+ * One figure: an icon in a tinted tile, its title (`label`), the number (`value`), then a subtitle line with its own
+ * small icon (`subtitle`, `subIcon`, `subTone`: "3 due this week" with a clock, "2 late" in red with an alert), a
+ * change line or a footnote, as needed. `href` makes the whole tile a link. Every part but label and value is optional.
+ */
 export function StatTile({
   icon,
   label,
   value,
+  subtitle,
+  subIcon,
+  subTone = "muted",
   change,
   foot,
   tone = "brand",
@@ -58,6 +75,11 @@ export function StatTile({
   icon?: React.ReactNode;
   label: string;
   value: React.ReactNode;
+  /** A line under the number, e.g. "3 due this week". */
+  subtitle?: React.ReactNode;
+  /** A small icon before the subtitle (drawn at 14px, hidden from screen readers: the words carry the meaning). */
+  subIcon?: React.ReactNode;
+  subTone?: StatSubTone;
   change?: { now: number; before: number; upIsGood?: boolean };
   foot?: React.ReactNode;
   tone?: StatTone;
@@ -71,6 +93,16 @@ export function StatTile({
         <span className="text-[13px] font-medium text-bf-muted">{label}</span>
       </div>
       <p className="mt-3 text-2xl font-semibold tabular-nums text-bf-ink">{value}</p>
+      {subtitle && (
+        <p className={cn("mt-1 flex items-center gap-1 text-xs", subTones[subTone])}>
+          {subIcon && (
+            <span aria-hidden className="shrink-0 [&_svg]:size-3.5">
+              {subIcon}
+            </span>
+          )}
+          <span>{subtitle}</span>
+        </p>
+      )}
       {change && <Change className="mt-1" {...change} />}
       {foot && <p className="mt-1 text-xs text-bf-muted">{foot}</p>}
     </>

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.1 (2026-11-20)
+
+- `StatTile` (the shared stats card) gains `subtitle`, `subIcon` and `subTone`: a line under the number with its own small icon, muted by default or coloured ok, warn, bad or brand ("3 due this week" with a clock, "2 late" in red with an alert). Icon, title (`label`), number (`value`), `tone`, `change`, `foot` and `href` are as before, so existing uses are unchanged.
+- `Board`: screen reader announcements in plain words ("Picked up WEB-149, position 1 of 4 in To do", "Dropped it in In progress, position 2 of 3") and instructions that point to the card's Move button, instead of dnd-kit's default that names ids.
+
 ## 0.7.0 (2026-11-20)
 
 - `Board` and `moveItem`, in their own entry point `@buildframe/ui/board` (an app without a board does not bundle it). Columns of cards that move by dragging the handle (pointer, finger, or keyboard: Space, arrow keys, Space), or by each card's Move menu, so no one has to drag (WCAG 2.5.7). On a phone one column shows at a time with a tab row to switch. The caller owns the items and answers `onMove(id, toColumnId, toIndex)`; `moveItem` is the pure function that applies a move to the list (array order is the order inside each column).
