@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.2 (2026-11-20)
+
+- `Tabs`: in URL-parameter and controlled mode a tab no longer has `aria-controls` pointing at a panel that does not exist (axe `aria-valid-attr-value`). Only `TabPanels`, which draws the panels, sets it.
+
 ## 0.6.1 (2026-11-20)
 
 - `Tabs` and `TabPanels`: a keyboard-focused tab and the tab panel now show a focus ring (WCAG 2.4.7).

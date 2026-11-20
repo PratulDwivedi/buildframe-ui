@@ -78,7 +78,8 @@ function ParamTabs({ param, items, ...rest }: RowProps & { param: string }) {
   return <TabRow {...rest} items={items} value={value} onChange={set} />;
 }
 
-function TabRow({ label, items, value, onChange, className, id }: RowProps & { value: string | undefined; onChange: (key: string) => void }) {
+/** `panels` is true only when TabPanels draws the matching panels; otherwise aria-controls would name nothing. */
+function TabRow({ label, items, value, onChange, className, id, panels = false }: RowProps & { value: string | undefined; onChange: (key: string) => void; panels?: boolean }) {
   const auto = React.useId();
   const base = id ?? auto;
   const refs = React.useRef<Record<string, HTMLButtonElement | null>>({});
@@ -114,7 +115,7 @@ function TabRow({ label, items, value, onChange, className, id }: RowProps & { v
             role="tab"
             id={tabId(base, it.key)}
             aria-selected={on}
-            aria-controls={panelId(base, it.key)}
+            aria-controls={panels ? panelId(base, it.key) : undefined}
             tabIndex={on ? 0 : -1}
             onClick={() => onChange(it.key)}
             onKeyDown={(e) => onKeyDown(e, index)}
@@ -151,7 +152,7 @@ export function TabPanels({
   const active = tabs.find((t) => t.key === value) ?? tabs[0];
   return (
     <div className={className}>
-      <TabRow id={base} label={label} items={tabs} value={active?.key} onChange={setValue} />
+      <TabRow id={base} label={label} items={tabs} value={active?.key} onChange={setValue} panels />
       {active && (
         <div role="tabpanel" id={panelId(base, active.key)} aria-labelledby={tabId(base, active.key)} tabIndex={0} className={cn("rounded-md outline-none focus-visible:ring-2 focus-visible:ring-bf-brand/50", panelClassName)}>
           {active.content}

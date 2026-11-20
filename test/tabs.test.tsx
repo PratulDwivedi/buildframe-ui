@@ -129,3 +129,19 @@ describe("TabPanels", () => {
     expect(screen.getByRole("tabpanel").className).toMatch(/focus-visible:ring-2/);
   });
 });
+
+describe("aria-controls (Qevli review finding 13)", () => {
+  it("is left off when the row has no panels of its own, so no tab points at nothing", () => {
+    render(<Tabs label="Views" items={ITEMS} param="tab" />);
+    for (const t of screen.getAllByRole("tab")) expect(t).not.toHaveAttribute("aria-controls");
+  });
+
+  it("points at a panel that exists when TabPanels draws one", () => {
+    render(<TabPanels label="Panels" tabs={[{ key: "a", label: "A", content: "first" }, { key: "b", label: "B", content: "second" }]} />);
+    const selected = screen.getByRole("tab", { selected: true });
+    const target = selected.getAttribute("aria-controls");
+    expect(target).toBeTruthy();
+    expect(document.getElementById(target!)).toBe(screen.getByRole("tabpanel"));
+  });
+});
+
