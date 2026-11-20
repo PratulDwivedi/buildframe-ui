@@ -18,6 +18,13 @@ describe("createBf", () => {
     expect(JSON.parse(init.body)).toEqual({ mode: "x", product: "qevli" });
   });
 
+  it("copes with a trailing slash on the url", async () => {
+    const fetchMock = reply({ ok: true });
+    vi.stubGlobal("fetch", fetchMock);
+    await createBf("qevli", { url: "https://p.supabase.co/", secretKey: "k" }).call({});
+    expect(fetchMock.mock.calls[0][0]).toBe("https://p.supabase.co/functions/v1/bf-signup");
+  });
+
   it("the product cannot be overridden by the caller's body", async () => {
     const fetchMock = reply({ ok: true });
     vi.stubGlobal("fetch", fetchMock);

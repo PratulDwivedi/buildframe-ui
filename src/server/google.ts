@@ -42,7 +42,8 @@ const b64url = (b: Buffer) => b.toString("base64url");
 const rand = () => b64url(randomBytes(32));
 const sha256hex = (s: string) => createHash("sha256").update(s).digest("hex");
 
-function sameSecret(a: string, b: string): boolean {
+function sameSecret(a: unknown, b: unknown): boolean {
+  if (typeof a !== "string" || typeof b !== "string") return false;
   const x = Buffer.from(a);
   const y = Buffer.from(b);
   return x.length === y.length && timingSafeEqual(x, y);
@@ -101,15 +102,24 @@ export function createGoogleSignIn(config: { clientId: string; clientSecret: str
    */
   async function exchangeCode(opts: { code: string; state: string; origin: string; pending: PendingSignIn }): Promise<GoogleIdentity> {
     const { code, state, origin, pending } = opts;
+    // `pending` comes from a parsed cookie and `state` from the URL: check their shape, not just their types.
+    if (![pending?.state, pending?.nonce, pending?.verifier].every((v) => typeof v === "string" && v)) {
+      throw new GoogleError("state_mismatch", "That sign-in didn't start here. Please try again.");
+    }
     if (!sameSecret(state, pending.state)) throw new GoogleError("state_mismatch", "That sign-in didn't start here. Please try again.");
 
-    const res = await fetch(TOKEN_ENDPOINT, {
+    let res: Response;
+    try {
+      res = await fetch(TOKEN_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({ code, client_id: CLIENT_ID, client_secret: CLIENT_SECRET, redirect_uri: googleRedirectUri(origin), grant_type: "authorization_code", code_verifier: pending.verifier }),
       cache: "no-store",
       signal: AbortSignal.timeout(15_000),
-    });
+      });
+    } catch {
+      throw new GoogleError("network", "Could not reach Google. Please try again.");
+    }
     const body = await res.json().catch(() => null);
     if (!res.ok || !body?.id_token) {
       throw new GoogleError(body?.error ?? `http_${res.status}`, body?.error_description ?? "Google refused the sign-in. Please try again.");
@@ -117,7 +127,9 @@ export function createGoogleSignIn(config: { clientId: string; clientSecret: str
 
     const claims = decodePayload(body.id_token as string);
     if (!ISSUERS.includes(String(claims.iss ?? ""))) throw new GoogleError("bad_issuer", "That token did not come from Google.");
-    if (String(claims.aud ?? "") !== CLIENT_ID) throw new GoogleError("bad_audience", "That token was issued for a different app.");
+    // `aud` is a string or, for a multi-audience token, a list; ours must be in it (and be the authorised party if several).
+    const aud = Array.isArray(claims.aud) ? claims.aud.map(String) : [String(claims.aud ?? "")];
+    if (!aud.includes(CLIENT_ID) || (aud.length > 1 && claims.azp !== CLIENT_ID)) throw new GoogleError("bad_audience", "That token was issued for a different app.");
     const exp = Number(claims.exp ?? 0);
     if (!exp || exp * 1000 <= Date.now()) throw new GoogleError("expired", "That sign-in took too long. Please try again.");
     // The token echoes the hash we sent, so compare against the hash.

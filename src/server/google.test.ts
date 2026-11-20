@@ -82,6 +82,18 @@ describe("exchangeCode", () => {
     tokenReply(jwt(good(pending, over)));
     expect(await code(run())).toBe(expected);
   });
+  it("accepts aud as a list that includes ours with azp, and refuses a multi-audience token without it", async () => {
+    tokenReply(jwt(good(pending, { aud: ["cid.apps.googleusercontent.com", "x"], azp: "cid.apps.googleusercontent.com" })));
+    expect(await code(run())).toBe("ok");
+    tokenReply(jwt(good(pending, { aud: ["cid.apps.googleusercontent.com", "x"] })));
+    expect(await code(run())).toBe("bad_audience");
+  });
+  it("turns a network failure and a tampered cookie into a GoogleError", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("timeout")));
+    expect(await code(run())).toBe("network");
+    expect(await code(g.exchangeCode({ code: "c", state: "s", origin: ORIGIN, pending: {} as never }))).toBe("state_mismatch");
+    expect(await code(g.exchangeCode({ code: "c", state: undefined as never, origin: ORIGIN, pending }))).toBe("state_mismatch");
+  });
   it("refuses a malformed token and a refusal from Google", async () => {
     tokenReply("not-a-jwt");
     expect(await code(run())).toBe("bad_id_token");

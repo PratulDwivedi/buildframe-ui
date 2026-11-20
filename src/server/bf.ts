@@ -24,7 +24,8 @@ export const bfEnvFromProcess = (): BfEnv => ({
 
 export function createBf(product: string, env: BfEnv | (() => BfEnv) = bfEnvFromProcess) {
   async function call<T extends object>(body: Record<string, unknown>): Promise<BfResult<T>> {
-    const { url, secretKey } = typeof env === "function" ? env() : env;
+    const { url: rawUrl, secretKey } = typeof env === "function" ? env() : env;
+    const url = rawUrl?.replace(/\/+$/, "");
     if (!url || !secretKey) return { ok: false, error: "This server is not configured to reach the platform" };
 
     let res: Response;

@@ -9,15 +9,16 @@ export interface RpcEnvelope<T> {
   data: T;
   message: string;
   status_code?: number;
+  paging?: { total_records?: number };
 }
 
-/** The data on success, otherwise the error text. A failed envelope is an error, never data. */
+/**
+ * The data on success, otherwise the error text. A failed envelope is an error, never data. Callers must test `error`, not
+ * `data`: a successful call may legitimately return null data.
+ */
 export async function callRpc<T = unknown>(client: RpcClient, fn: string, params: Record<string, unknown> = {}): Promise<{ data: T | null; error: string | null }> {
-  const { data, error } = await client.rpc(fn, params);
-  if (error) return { data: null, error: error.message };
-  const env = data as RpcEnvelope<T> | null;
-  if (!env?.is_success) return { data: null, error: env?.message ?? "Unknown error" };
-  return { data: env.data, error: null };
+  const { data, error } = await callRpcEnvelope<T>(client, fn, params);
+  return { data, error };
 }
 
 /** The same, keeping the message on success too (some save functions say what they did, not only that they did). */
