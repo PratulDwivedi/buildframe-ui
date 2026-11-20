@@ -72,6 +72,17 @@ export function Popover({
     };
   }, [open, align, width]);
 
+  // Once the panel is drawn its height is known: if it would run off the bottom of the screen, open it above the
+  // button instead (as the Combobox does), never past the top. Placed again from the button on scroll and resize.
+  React.useLayoutEffect(() => {
+    if (!open || !pos || !panel.current || !btn.current) return;
+    const h = panel.current.offsetHeight;
+    const r = btn.current.getBoundingClientRect();
+    const fitsBelow = r.bottom + 6 + h <= window.innerHeight - 8;
+    const wanted = fitsBelow ? r.bottom + 6 : Math.max(8, r.top - 6 - h);
+    if (Math.abs(wanted - pos.top) > 1) setPos({ ...pos, top: wanted });
+  }, [open, pos]);
+
   React.useEffect(() => {
     // A panel with nothing to focus (plain text) takes the focus itself, so Escape still closes it.
     if (open) (panel.current?.querySelector<HTMLElement>('[role="menuitem"],[role="menuitemcheckbox"],input,button') ?? panel.current)?.focus();
