@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.3 (2026-11-20)
+
+- `DataTable`: the desktop scroll box is now `relative`, so screen-reader-only text (`sr-only` is absolutely positioned) in a cell scrolled out of view no longer widens the page with a sideways scrollbar.
+
 ## 0.6.2 (2026-11-20)
 
 - `Tabs`: in URL-parameter and controlled mode a tab no longer has `aria-controls` pointing at a panel that does not exist (axe `aria-valid-attr-value`). Only `TabPanels`, which draws the panels, sets it.

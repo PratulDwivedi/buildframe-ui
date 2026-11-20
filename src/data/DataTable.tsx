@@ -445,7 +445,7 @@ export function DataTable<T>({
         <div className={cn("transition-opacity", pending && "opacity-60")}>
           {/* ── desktop table ── */}
           {prefs.layout === "table" && rows.length > 0 && (
-            <div className="hidden overflow-auto sm:block" style={{ maxHeight }}>
+            <div className="relative hidden overflow-auto sm:block" style={{ maxHeight }}>
               <table className={cn("w-full border-separate border-spacing-0", compact ? "text-[13px]" : "text-sm")}>
                 <thead>
                   <tr className="text-left text-xs text-bf-muted">

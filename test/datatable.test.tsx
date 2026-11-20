@@ -152,3 +152,9 @@ it("hands a menu action the visible column keys, in order, so a browser CSV can 
   await userEvent.click(screen.getByText("Download CSV"));
   expect(onSelect).toHaveBeenCalledWith(["name", "price"]);
 });
+
+it("its scroll box is a positioning context, so screen-reader-only text in a scrolled-away cell cannot widen the page", () => {
+  render(<DataTable columns={columns} rows={rows} rowKey={(r) => r.id} total={2} query={query} />);
+  const box = screen.getByRole("table").closest(".overflow-auto")!;
+  expect(box.className).toMatch(/(^|\s)relative(\s|$)/);
+});
