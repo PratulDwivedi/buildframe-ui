@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.0 (2026-11-20)
+
+- New components: `Tabs` and `TabPanels` (URL parameter support), `Avatar` and `AvatarStack` (initials or image), `ProgressBar`, `Feed` (activity items with optional links).
+- Category colours added to the theme, and `@buildframe/ui/base.css` for foundational styles (typography, reduced motion).
+- Theme helpers: `useThemeToggle` and theme init for dark mode.
+- `AppShell` simplified (theme logic moved into the shared helpers).
+
 ## 0.5.0 (2026-11-14)
 
 - `HtmlEditor`, a rich text editor, in its own entry point `@buildframe/ui/editor` (an app that does not use it does not bundle it). Built on Tiptap 3 (ProseMirror, MIT). What you see is the html that is stored.
