@@ -122,4 +122,10 @@ describe("TabPanels", () => {
     const ids = screen.getAllByRole("tab").map((t) => t.id);
     expect(new Set(ids).size).toBe(ids.length);
   });
+
+  it("shows keyboard focus on a tab and on the panel (Qevli review finding 3, WCAG 2.4.7)", () => {
+    render(<TabPanels label="Focus" tabs={tabs} />);
+    expect(screen.getAllByRole("tab")[0].className).toMatch(/focus-visible:ring-2/);
+    expect(screen.getByRole("tabpanel").className).toMatch(/focus-visible:ring-2/);
+  });
 });

@@ -25,7 +25,7 @@ const ROW = "flex gap-1 overflow-x-auto border-b border-bf-line [scrollbar-width
 const tabClass = (on: boolean) =>
   cn(
     "-mb-px inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap border-b-2 px-2.5 py-2 text-[13px] font-medium outline-none transition-colors",
-    "focus-visible:rounded-t-md focus-visible:bg-bf-surface-alt",
+    "focus-visible:rounded-t-md focus-visible:bg-bf-surface-alt focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-bf-brand/50",
     on ? "border-bf-brand text-bf-brand-strong" : "border-transparent text-bf-muted hover:text-bf-ink",
   );
 
@@ -153,7 +153,7 @@ export function TabPanels({
     <div className={className}>
       <TabRow id={base} label={label} items={tabs} value={active?.key} onChange={setValue} />
       {active && (
-        <div role="tabpanel" id={panelId(base, active.key)} aria-labelledby={tabId(base, active.key)} tabIndex={0} className={cn("outline-none", panelClassName)}>
+        <div role="tabpanel" id={panelId(base, active.key)} aria-labelledby={tabId(base, active.key)} tabIndex={0} className={cn("rounded-md outline-none focus-visible:ring-2 focus-visible:ring-bf-brand/50", panelClassName)}>
           {active.content}
         </div>
       )}

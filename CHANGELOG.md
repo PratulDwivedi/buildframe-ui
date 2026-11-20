@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.1 (2026-11-20)
+
+- `Tabs` and `TabPanels`: a keyboard-focused tab and the tab panel now show a focus ring (WCAG 2.4.7).
+- `AvatarStack`: the overlap is 4px instead of 6px, so the second initial is no longer cut off.
+
 ## 0.6.0 (2026-11-20)
 
 - New components: `Tabs` and `TabPanels` (URL parameter support), `Avatar` and `AvatarStack` (initials or image), `ProgressBar`, `Feed` (activity items with optional links).

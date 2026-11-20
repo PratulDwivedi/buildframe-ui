@@ -70,3 +70,12 @@ it("renders nothing for nobody", () => {
   const { container } = render(<AvatarStack users={[]} />);
   expect(container).toBeEmptyDOMElement();
 });
+
+it("overlaps the stack by 4px at most, so a second initial is never cut off (Qevli review finding 2)", () => {
+  render(<AvatarStack users={team.slice(0, 3)} max={3} />);
+  const avatars = screen.getByRole("group").querySelectorAll("[data-bf-avatar]");
+  expect(avatars[1].className).toMatch(/(^|\s)-ml-1(\s|$)/);
+  expect(avatars[1].className).not.toMatch(/-ml-1\.5|-ml-2/);
+  render(<AvatarStack users={team} max={2} />);
+  expect(screen.getByText("+4").className).toMatch(/(^|\s)-ml-1(\s|$)/);
+});

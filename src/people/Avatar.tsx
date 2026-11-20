@@ -101,13 +101,13 @@ export function AvatarStack({
           size={size}
           variant={u.kind === "assistant" ? "ai" : "person"}
           decorative
-          className={cn("ring-2 ring-bf-surface", i > 0 && "-ml-1.5")}
+          className={cn("ring-2 ring-bf-surface", i > 0 && "-ml-1")}
         />
       ))}
       {hidden.length > 0 && (
         <span
           title={hidden.map(nameOf).join(", ")}
-          className={cn("-ml-1.5 grid shrink-0 place-items-center rounded-full bg-bf-neutral-bg font-semibold text-bf-neutral-ink ring-2 ring-bf-surface", SIZES[size])}
+          className={cn("-ml-1 grid shrink-0 place-items-center rounded-full bg-bf-neutral-bg font-semibold text-bf-neutral-ink ring-2 ring-bf-surface", SIZES[size])}
         >
           +{hidden.length}
         </span>
