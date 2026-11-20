@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.0 (2026-11-20)
+
+- `Board` and `moveItem`, in their own entry point `@buildframe/ui/board` (an app without a board does not bundle it). Columns of cards that move by dragging the handle (pointer, finger, or keyboard: Space, arrow keys, Space), or by each card's Move menu, so no one has to drag (WCAG 2.5.7). On a phone one column shows at a time with a tab row to switch. The caller owns the items and answers `onMove(id, toColumnId, toIndex)`; `moveItem` is the pure function that applies a move to the list (array order is the order inside each column).
+- New dependencies: `@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/utilities` (MIT). Chosen over a hand-written drag because it handles touch and keyboard dragging.
+
 ## 0.6.3 (2026-11-20)
 
 - `DataTable`: the desktop scroll box is now `relative`, so screen-reader-only text (`sr-only` is absolutely positioned) in a cell scrolled out of view no longer widens the page with a sideways scrollbar.
