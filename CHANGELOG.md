@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.8.0 (2026-11-20)
+
+- New entry point `@buildframe/ui/server`, for server code only (it uses Node's crypto): the helpers three products each carried a copy of.
+  - `createBf(product)`: calls to the platform's `bf-signup` edge function with the project's secret key (`call`, `signUpOrganisation`, `requestPasswordReset`, `hashInviteToken`). The product name is bound once and cannot be overridden by a request body. An empty or missing key or url is refused, and a network failure or a non-JSON answer comes back as `ok: false`, never a throw.
+  - `callRpc`, `callRpcEnvelope`, `callRpcPaged`: unwrap the database envelope `{ is_success, data, message, paging }` from any client with an `rpc` method. A failed envelope is an error, never data.
+  - `createGoogleSignIn({ clientId, clientSecret })`: the Google sign-in handshake handled by the app (`configured`, `startSignIn`, `exchangeCode`) with state, PKCE, a hashed nonce, and checks of issuer, audience, expiry, nonce and verified email. `GoogleError` carries a code the callback maps to a message.
+- `safeNext`, `authMessage` and the other auth helpers are unchanged (`@buildframe/ui/core`).
+- Not in this release: `FormatContext` (package plan G2).
+
 ## 0.7.2 (2026-11-20)
 
 - `Popover` (the menu behind "Move to", the column chooser, the Download choices): it now opens above its button when it would run off the bottom of the screen and there is room above, and never past the top. It always opened below before, so a menu on a row near the bottom of a page was cut off and unreachable (a `fixed` panel cannot be scrolled into view).
