@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.10.0 (2026-11-21)
+
+One look for every stat tile. Until now each page and product chose its own layout (stacked, inline or corner) and wrote its own adapter, so the same component looked different everywhere.
+
+- **`StatTile`'s default layout is now `corner`** (the title and a large number at the left, the icon top right, the subtitle under it), the look the account console and Qevli already use. **No product renders differently from this change alone:** every product that uses the package's tile already passes `layout`. (Buildframe Sites draws its own local tile and is unaffected until it moves onto the package.) Products stop passing `layout` as they move onto this version; `stacked`, `inline` and `accent` stay in the package for the few screens that cannot take the default.
+- **The corner tile fits narrow columns.** The title wraps to two lines (and is the tooltip when cut), and the big number is sized by the width of its own column (container queries): 30px when there is room, down to 18px, and it wraps rather than run under the icon. Measured in a 390px frame: two tiles across, number at 18px, no page overflow; at 360px a seven-digit amount wraps onto two lines.
+- **`StatTile` is as tall as its cell by default** (`h-full`), so a tile in a list item or a link needs no extra class.
+- **New `StatRow`:** the one grid for a row of tiles. Columns follow the number of tiles drawn (a `false` or `null` child, such as a tile shown only to some people, does not count, and Fragments are looked into): 1 to 6 across on a wide screen (more than six wrap); one across on a phone for one to three tiles, two across for four or more; every tile as tall as its cell; nothing drawn when there are none. `as="ul"` with `label` makes it a labelled list (each tile in an item). A component that itself renders several tiles counts as one child.
+- Tests first: 21 new, 296 in all. A reviewer (fresh context) found 3 Majors in the first pass (the wrong note about Sites, the number overflowing a narrow tile, a Fragment counted as one tile) and a duplicate-key bug in the fix to the third; all fixed and tested, plus the Minors, fixed or documented here.
+- A tile sizes its number by the width of its own column, so put it in a column that has a width (`StatRow`, or any grid cell). Placed in a plain flex row with no width it can shrink to almost nothing.
+- Not covered by tests: the look in a real browser. The class-based tests cannot see overflow; it was measured by hand as above.
+
 ## 0.9.1 (2026-11-21)
 
 Fixes to 0.9.0, found while moving the first product onto it and by the post-fix review. No product had pinned 0.9.0 yet.

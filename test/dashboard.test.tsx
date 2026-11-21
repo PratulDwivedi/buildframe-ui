@@ -10,7 +10,7 @@ vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams("tab=x&days=7"),
 }));
 
-import { BarSeries, Change, PeriodSwitch, ShareBars, StatTile } from "../src/dashboard/Stats";
+import { BarSeries, Change, PeriodSwitch, ShareBars, StatRow, StatTile } from "../src/dashboard/Stats";
 
 it("measures a change against the period before", () => {
   expect(periodChange(0, 0)).toEqual({ kind: "none" });
@@ -93,7 +93,7 @@ it("colours the subtitle line by its tone, muted by default", () => {
 });
 
 it("draws no subtitle line when there is none, and keeps the footnote working", () => {
-  const { container, rerender } = render(<StatTile label="Members" value="4" />);
+  const { container, rerender } = render(<StatTile layout="stacked" label="Members" value="4" />);
   expect(container.querySelectorAll("p")).toHaveLength(1);
   rerender(<StatTile label="Members" value="4" foot="Two invited" />);
   expect(screen.getByText("Two invited")).toBeInTheDocument();
@@ -127,9 +127,16 @@ it("the inline layout keeps a change line and a footnote under the row, and stil
   expect(within(link).getByText("Two invited")).toBeTruthy();
 });
 
-it("the default layout is unchanged: stacked", () => {
+it("the default layout is corner, the one look every product uses; the others stay available but products do not pick them", () => {
   const { container } = render(<StatTile label="Members" value="4" />);
-  expect((container.firstElementChild as HTMLElement).getAttribute("data-layout")).toBe("stacked");
+  expect((container.firstElementChild as HTMLElement).getAttribute("data-layout")).toBe("corner");
+});
+
+it("a corner tile's title wraps to two lines instead of being cut off, so five across stay readable", () => {
+  render(<StatTile label="Credits used, all organisations" value="0" />);
+  const title = screen.getByText("Credits used, all organisations");
+  expect(title.className).not.toMatch(/\btruncate\b/);
+  expect(title.className).toMatch(/line-clamp-2/);
 });
 
 it("the corner layout puts the icon in the top-right corner, level with the title, and the subtitle under the number", () => {
@@ -164,4 +171,147 @@ it("every layout shows the title, the number and the subtitle", () => {
     expect(screen.getByText("3 due")).toBeTruthy();
     unmount();
   }
+});
+
+describe("StatRow: one grid for a row of figures, so no page picks its own", () => {
+  const tiles = (n: number) => Array.from({ length: n }, (_, i) => <StatTile key={i} label={`Figure ${i}`} value={String(i)} />);
+
+  it.each([
+    [1, "grid-cols-1"],
+    [2, "sm:grid-cols-2"],
+    [3, "sm:grid-cols-3"],
+    [4, "lg:grid-cols-4"],
+    [5, "xl:grid-cols-5"],
+    [6, "xl:grid-cols-6"],
+  ])("with %i tiles the grid is %s", (n, cls) => {
+    const { container } = render(<StatRow>{tiles(n)}</StatRow>);
+    expect((container.firstElementChild as HTMLElement).className).toContain(cls);
+  });
+
+  it("counts only the tiles that are drawn: a false or null child (a tile shown only to some people) does not leave a gap", () => {
+    const { container } = render(
+      <StatRow>
+        <StatTile label="A" value="1" />
+        {false}
+        {null}
+        <StatTile label="B" value="2" />
+        <StatTile label="C" value="3" />
+        <StatTile label="D" value="4" />
+      </StatRow>,
+    );
+    expect((container.firstElementChild as HTMLElement).className).toContain("lg:grid-cols-4");
+  });
+
+  it("makes every tile the height of the tallest in its row", () => {
+    const { container } = render(<StatRow>{tiles(3)}</StatRow>);
+    expect((container.firstElementChild as HTMLElement).className).toContain("[&>*]:h-full");
+  });
+
+  it("draws nothing at all when there are no tiles", () => {
+    const { container } = render(<StatRow>{[false, null]}</StatRow>);
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  it("more than six tiles stay six across at most, and wrap", () => {
+    const { container } = render(<StatRow>{tiles(8)}</StatRow>);
+    expect((container.firstElementChild as HTMLElement).className).toContain("xl:grid-cols-6");
+  });
+
+  it("takes an extra class for spacing", () => {
+    const { container } = render(<StatRow className="mb-5">{tiles(2)}</StatRow>);
+    expect((container.firstElementChild as HTMLElement).className).toContain("mb-5");
+  });
+
+  it("counts the tiles inside a Fragment, so a row written as <>{a}{b}{c}{d}</> still gets four columns", () => {
+    const { container } = render(
+      <StatRow>
+        <>
+          <StatTile label="A" value="1" />
+          <StatTile label="B" value="2" />
+        </>
+        <>
+          <StatTile label="C" value="3" />
+          {false}
+          <StatTile label="D" value="4" />
+        </>
+      </StatRow>,
+    );
+    expect((container.firstElementChild as HTMLElement).className).toContain("lg:grid-cols-4");
+  });
+
+  it("can be a list: as='ul' draws a labelled list with each tile in an item", () => {
+    render(
+      <StatRow as="ul" label="Totals">
+        <StatTile label="A" value="1" />
+        <StatTile label="B" value="2" />
+      </StatRow>,
+    );
+    const list = screen.getByRole("list", { name: "Totals" });
+    expect(within(list).getAllByRole("listitem")).toHaveLength(2);
+  });
+
+  it("a plain row is not a list", () => {
+    render(<StatRow><StatTile label="A" value="1" /></StatRow>);
+    expect(screen.queryByRole("list")).toBeNull();
+  });
+});
+
+describe("StatTile fits its row", () => {
+  it("is as tall as its grid cell by default, so a tile wrapped in a list item or a link needs no extra class", () => {
+    const { container } = render(<StatTile label="Members" value="4" />);
+    expect((container.firstElementChild as HTMLElement).className).toMatch(/\bh-full\b/);
+    const link = render(<StatTile label="Members" value="4" href="/x" />);
+    expect((link.container.firstElementChild as HTMLElement).className).toMatch(/\bh-full\b/);
+  });
+
+  it("a long title can still be read in full: it is the tooltip when it is cut at two lines", () => {
+    render(<StatTile label="Credits used, all organisations" value="0" />);
+    expect(screen.getByText("Credits used, all organisations")).toHaveAttribute("title", "Credits used, all organisations");
+  });
+
+  it("the big number gets smaller as its column gets narrower, and may wrap rather than run under the icon", () => {
+    render(<StatTile label="Billed" value="₹12,34,567" icon={<svg />} />);
+    const number = screen.getByText("₹12,34,567");
+    expect(number.className).toMatch(/@\[[0-9.]+rem\]:text-/);
+    expect(number.className).toMatch(/break-words|\[overflow-wrap:anywhere\]/);
+    expect(number.parentElement?.className).toMatch(/@container/);
+  });
+});
+
+describe("StatRow keys and labels", () => {
+  it("gives every tile its own React key, also when some sit inside Fragments (no duplicate-key warning)", () => {
+    const errors = vi.spyOn(console, "error").mockImplementation(() => {});
+    render(
+      <StatRow>
+        <StatTile label="A" value="1" />
+        <>
+          <StatTile label="B" value="2" />
+          <StatTile label="C" value="3" />
+        </>
+        <>
+          <>
+            <StatTile label="D" value="4" />
+          </>
+          <StatTile label="E" value="5" />
+        </>
+      </StatRow>,
+    );
+    const warned = errors.mock.calls.some((c) => /same key|unique "key"/i.test(String(c[0])));
+    errors.mockRestore();
+    expect(warned).toBe(false);
+    expect(screen.getAllByText(/^[A-E]$/).map((n) => n.textContent)).toEqual(["A", "B", "C", "D", "E"]);
+  });
+
+  it("keeps keyed tiles from an array in the same order and without a key warning", () => {
+    const errors = vi.spyOn(console, "error").mockImplementation(() => {});
+    render(<StatRow>{["x", "y", "z"].map((k) => <StatTile key={k} label={k.toUpperCase()} value="1" />)}</StatRow>);
+    const warned = errors.mock.calls.some((c) => /unique "key"|same key/i.test(String(c[0])));
+    errors.mockRestore();
+    expect(warned).toBe(false);
+  });
+
+  it("a plain row with a label is a labelled group, so the label is announced", () => {
+    render(<StatRow label="Totals"><StatTile label="A" value="1" /></StatRow>);
+    expect(screen.getByRole("group", { name: "Totals" })).toBeInTheDocument();
+  });
 });

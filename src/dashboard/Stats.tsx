@@ -79,7 +79,7 @@ export function StatTile({
   change,
   foot,
   tone = "brand",
-  layout = "stacked",
+  layout = "corner",
   href,
   className,
 }: {
@@ -95,10 +95,13 @@ export function StatTile({
   foot?: React.ReactNode;
   tone?: StatTone;
   /**
-   * "stacked" (default): icon and title, then the number, then the subtitle, one under the other.
+   * Products do not pass this: the default, "corner", is the one look every product uses, and rows go in `StatRow`.
+   * The others stay for the few screens that cannot take it.
+   * "stacked": icon and title, then the number, then the subtitle, one under the other.
    * "inline": the icon at the left, the title above, and the number and subtitle on one line beside it. About half
    * the height, for a row of tiles on a dashboard; the subtitle wraps under the number when the tile is narrow.
-   * "corner": the title and a large number at the left, the icon in the top-right corner, the subtitle underneath.
+   * "corner" (default): the title and a large number at the left, the icon in the top-right corner, the subtitle underneath.
+   * The title wraps to two lines rather than being cut off.
    * "accent": no icon tile; a coloured bar down the left edge and the icon small, before the title. The densest.
    */
   layout?: StatLayout;
@@ -142,9 +145,9 @@ export function StatTile({
     body = (
       <>
         <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <p className="truncate text-[13px] font-medium text-bf-muted">{label}</p>
-            <p className="mt-1 text-3xl font-semibold leading-none tabular-nums text-bf-ink">{value}</p>
+          <div className="@container min-w-0 flex-1">
+            <p title={label} className="line-clamp-2 text-[13px] font-medium leading-tight text-bf-muted">{label}</p>
+            <p className="mt-1 break-words text-lg font-semibold leading-none tabular-nums text-bf-ink @[7rem]:text-xl @[9rem]:text-2xl @[12rem]:text-3xl">{value}</p>
           </div>
           {icon && <span className={cn("grid size-9 shrink-0 place-items-center rounded-xl [&_svg]:size-[18px]", iconTones[tone])}>{icon}</span>}
         </div>
@@ -189,13 +192,13 @@ export function StatTile({
   const pad = inline ? "p-3.5" : "p-4";
   if (href) {
     return (
-      <a href={href} data-layout={layout} className={cn("block rounded-2xl border border-bf-line bg-bf-surface transition-colors hover:border-bf-line-strong", pad, className)}>
+      <a href={href} data-layout={layout} className={cn("block h-full rounded-2xl border border-bf-line bg-bf-surface transition-colors hover:border-bf-line-strong", pad, className)}>
         {body}
       </a>
     );
   }
   return (
-    <Card data-layout={layout} className={cn(pad, className)}>
+    <Card data-layout={layout} className={cn("h-full", pad, className)}>
       {body}
     </Card>
   );
@@ -276,6 +279,72 @@ export function BarSeries({
           <span>{points[points.length - 1].label}</span>
         </div>
       )}
+    </div>
+  );
+}
+
+const STAT_COLS: Record<number, string> = {
+  1: "grid-cols-1",
+  2: "grid-cols-1 sm:grid-cols-2",
+  3: "grid-cols-1 sm:grid-cols-3",
+  4: "grid-cols-2 lg:grid-cols-4",
+  5: "grid-cols-2 sm:grid-cols-3 xl:grid-cols-5",
+  6: "grid-cols-2 sm:grid-cols-3 xl:grid-cols-6",
+};
+
+/**
+ * The drawn children, Fragments flattened and false/null dropped. A tile inside a Fragment gets the Fragment's key in front of
+ * its own, so keys stay unique across the whole row. A component that itself renders several tiles counts as one.
+ */
+function drawnChildren(children: React.ReactNode, keyPrefix = ""): React.ReactNode[] {
+  const out: React.ReactNode[] = [];
+  React.Children.toArray(children).forEach((child) => {
+    if (React.isValidElement<{ children?: React.ReactNode }>(child) && child.type === React.Fragment) {
+      out.push(...drawnChildren(child.props.children, `${keyPrefix}${child.key ?? ""}`));
+    } else if (React.isValidElement(child) && keyPrefix) {
+      out.push(React.cloneElement(child, { key: `${keyPrefix}${child.key ?? ""}` }));
+    } else {
+      out.push(child);
+    }
+  });
+  return out;
+}
+
+/**
+ * A row of stat tiles. The one grid every product uses, so no page chooses its own columns: the number of columns follows
+ * the number of tiles drawn (a `false` or `null` child, such as a tile shown only to some people, does not count, and
+ * Fragments are looked into), one or two across on a phone depending on how many there are, and every tile as tall as
+ * its cell. Draws nothing when there are no tiles. More than six wrap. `as="ul"` makes it a list (each tile in an item;
+ * give `label` so it is announced). Count tiles as direct children: a component that renders several tiles counts as one.
+ */
+export function StatRow({
+  children,
+  className,
+  as = "div",
+  label,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  as?: "div" | "ul";
+  label?: string;
+}) {
+  const tiles = drawnChildren(children);
+  if (tiles.length === 0) return null;
+  const classes = cn("grid gap-3", STAT_COLS[Math.min(tiles.length, 6)], className);
+  if (as === "ul") {
+    return (
+      <ul aria-label={label} className={cn(classes, "list-none p-0")}>
+        {tiles.map((tile, i) => (
+          <li key={React.isValidElement(tile) && tile.key != null ? tile.key : i} className="min-w-0">
+            {tile}
+          </li>
+        ))}
+      </ul>
+    );
+  }
+  return (
+    <div role={label ? "group" : undefined} aria-label={label} className={cn(classes, "[&>*]:h-full")}>
+      {tiles}
     </div>
   );
 }
