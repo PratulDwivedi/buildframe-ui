@@ -106,4 +106,10 @@ describe("SignOutButton", () => {
     expect(push).not.toHaveBeenCalled();
     Object.defineProperty(window, "location", { configurable: true, value: original });
   });
+
+  it("lets the app size the button itself: wrapperClassName styles the outer element, className the button", () => {
+    const { container } = render(<SignOutButton signOut={async () => {}} to="/x" wrapperClassName="w-full" className="w-full" />);
+    expect((container.firstElementChild as HTMLElement).className).toMatch(/w-full/);
+    expect(screen.getByRole("button").className).toMatch(/w-full/);
+  });
 });

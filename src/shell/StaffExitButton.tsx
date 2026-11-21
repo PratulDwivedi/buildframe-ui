@@ -8,7 +8,7 @@ export function StaffExitButton() {
   return (
     <button
       type="submit"
-      aria-label="Exit staff view"
+      aria-label={pending ? undefined : "Exit staff view"}
       disabled={pending}
       className="rounded-md px-2.5 py-1 text-[12px] font-semibold text-bf-copy transition-colors hover:bg-bf-surface-alt hover:text-bf-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-bf-brand-strong disabled:opacity-55"
     >

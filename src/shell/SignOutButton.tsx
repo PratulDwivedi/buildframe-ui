@@ -4,6 +4,7 @@ import { useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { Button, type ButtonSize, type ButtonVariant } from "../primitives/Button";
 import { FormError } from "../primitives/Field";
+import { cn } from "../lib/cn";
 
 /** Supabase reports a failed sign-out by resolving `{ error }`, not by throwing; both count as a failure here. */
 function failed(result: unknown): boolean {
@@ -36,6 +37,7 @@ export function SignOutButton({
   variant = "primary",
   size,
   className,
+  wrapperClassName,
   children,
   fullReload = false,
   onError,
@@ -47,6 +49,8 @@ export function SignOutButton({
   variant?: ButtonVariant;
   size?: ButtonSize;
   className?: string;
+  /** Classes for the outer element that holds the button and its error message (for example `w-full` in a flex row). */
+  wrapperClassName?: string;
   /** Shown instead of `label` when given. */
   children?: ReactNode;
   fullReload?: boolean;
@@ -78,7 +82,7 @@ export function SignOutButton({
   }
 
   return (
-    <span className="inline-flex flex-col items-start gap-2">
+    <span className={cn("inline-flex flex-col items-start gap-2", wrapperClassName)}>
       <Button type="button" variant={variant} size={size} className={className} onClick={run} disabled={busy}>
         {busy ? busyLabel : (children ?? label)}
       </Button>

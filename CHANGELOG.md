@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.9.1 (2026-11-21)
+
+Fixes to 0.9.0, found while moving the first product onto it and by the post-fix review. No product had pinned 0.9.0 yet.
+
+- `StaffBanner`: product links on `http://localhost` or `http://127.0.0.1` (any port) are shown again. 0.9.0 dropped every plain-http link, which would have hidden the local-development links the platform console builds from its environment settings. Any other plain `http`, a look-alike host such as `localhost.evil.example` and `localhost@evil.example` stay refused.
+- `StaffBanner`: while the exit action runs, the Exit button's accessible name is its visible text ("Exiting...") instead of a stale "Exit staff view".
+- `SignOutButton`: new `wrapperClassName`, for the outer element that holds the button and its error message, so an app can make the button full width or place it in a flex row. `className` still styles the button itself.
+- Tests: 4 new, 275 in all.
+
 ## 0.9.0 (2026-11-21)
 
 Two components that six products each carried their own copy of. Moving a product onto them removes its copy; nothing else in the package changes.

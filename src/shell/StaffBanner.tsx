@@ -15,8 +15,14 @@ export interface StaffBannerLink {
   url: string;
 }
 
-/** Only https addresses and same-site paths are linked; anything else (javascript:, data:, plain http, "//host") is dropped. */
-const safeUrl = (url: string) => url.startsWith("https://") || (url.startsWith("/") && !url.startsWith("//"));
+/**
+ * Only https addresses, same-site paths and local development addresses (http on localhost or 127.0.0.1, exactly that host)
+ * are linked; anything else (javascript:, data:, other plain http, "//host", a look-alike host) is dropped.
+ */
+const safeUrl = (url: string) =>
+  url.startsWith("https://") ||
+  (url.startsWith("/") && !url.startsWith("//")) ||
+  /^http:\/\/(localhost|127\.0\.0\.1)(:\d{1,5})?(\/|$)/.test(url);
 
 /**
  * The bar shown on every console page while platform staff are inside a customer's organisation, so it is never a

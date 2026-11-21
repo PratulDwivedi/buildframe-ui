@@ -96,6 +96,26 @@ describe("StaffBanner", () => {
     expect(screen.queryByRole("link", { name: "Plain http" })).toBeNull();
   });
 
+  it("keeps local development links (http on localhost or 127.0.0.1), still refusing other plain http", () => {
+    render(
+      <StaffBanner
+        session={SESSION}
+        exitAction={exit}
+        formatTime={() => "t"}
+        links={[
+          { code: "a", name: "Local", url: "http://localhost:3008/admin" },
+          { code: "b", name: "Loopback", url: "http://127.0.0.1:3090/app" },
+          { code: "c", name: "Lookalike", url: "http://localhost.evil.example/app" },
+          { code: "d", name: "Userinfo", url: "http://localhost@evil.example/app" },
+        ]}
+      />,
+    );
+    expect(screen.getByRole("link", { name: "Local" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Loopback" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Lookalike" })).toBeNull();
+    expect(screen.queryByRole("link", { name: "Userinfo" })).toBeNull();
+  });
+
   it("lists other product consoles only when asked, opening in a new tab safely", () => {
     const { rerender } = render(<StaffBanner session={SESSION} exitAction={exit} formatTime={() => "t"} />);
     expect(screen.queryByRole("link")).toBeNull();
