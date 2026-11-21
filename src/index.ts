@@ -48,6 +48,8 @@ export { useThemeToggle } from "./theme/useThemeToggle";
 export { themeInitScript } from "./theme/init";
 export { cn } from "./lib/cn";
 export { AppShell, ProfileMenu, useSidebar, activeHref, initials, type NavGroup, type NavItem, type ProfileLink, type ShellUser } from "./shell/AppShell";
+export { SignOutButton } from "./shell/SignOutButton";
+export { StaffBanner, type StaffBannerSession, type StaffBannerLink } from "./shell/StaffBanner";
 
 // Auth (signed-out pages)
 export { AuthShell, AuthLink, GoogleButton, CheckEmail, type GoogleStart } from "./auth/AuthShell";

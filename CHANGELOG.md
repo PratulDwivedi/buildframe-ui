@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.9.0 (2026-11-21)
+
+Two components that six products each carried their own copy of. Moving a product onto them removes its copy; nothing else in the package changes.
+
+- `SignOutButton`: signs out first, then goes to `to` (a plain link to the login page is a trap on a "not authorised" screen, because the proxy bounces a signed-in person straight back). Nothing is navigated when signing out fails, whether the function throws or resolves `{ error }` (how Supabase reports it); the person sees "Could not sign out" and can try again, and `onError` is called. Disabled while it runs, so a double click signs out once. Primary by default; takes `variant`, `size`, `className`, `children` (instead of `label`) and `fullReload` (a full page load instead of a client navigation, as Qevli's copy did).
+  - **`to` is required** (the copies differed: `/admin/login` in TripSetu and Sites, `/app/login` elsewhere).
+  - It is a client component, so `signOut` is a function prop and cannot be passed from a server component: each app keeps a tiny client wrapper that supplies `() => createClient().auth.signOut()`. The doc comment has the three-line example.
+- `StaffBanner`: the bar shown while platform staff are inside a customer's organisation. Says whose data, read-only or "you can change things" (different tone and words, never colour alone), until when, and the recorded reason; an Exit button that disables itself while the exit action runs. Props: `session`, `exitAction` (a server action, used as the form action), **`formatTime` (required: it renders on the server, and a default would show the server's time zone)**, optional `links` to other product consoles (only `https:` and same-site paths are shown). A labelled region (`aria-label="Staff view"`), not a live region. An unreadable `expires_at` leaves "until ..." out instead of printing "Invalid Date".
+  - Visible changes for the products that move onto it: the wording is "Staff view: <name> · read-only" everywhere; in the platform console it replaces "Inside <name> · can edit", and its edit tone changes from the accent colour to the warning tone.
+- Both are exported from `@buildframe/ui`. Tests first: 22 new, 271 in all.
+- Reviewed by an independent reviewer before release (fresh context): 14 findings, all Majors fixed, Minors fixed or documented above.
+
 ## 0.8.0 (2026-11-20)
 
 - New entry point `@buildframe/ui/server`, for server code only (it uses Node's crypto): the helpers three products each carried a copy of.
