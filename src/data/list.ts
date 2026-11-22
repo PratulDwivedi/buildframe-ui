@@ -184,11 +184,15 @@ export function pickExportColumns<T, C>(all: ExportColumn<T, C>[], cols: string 
 
 /**
  * CSV text from export columns and rows: every cell quoted when it holds a comma, quote or line break, a header
- * row first. For a list built in the browser; pair with pickExportColumns so it follows the visible columns.
+ * row first; text that a spreadsheet would run as a formula (a leading = + - @ tab or CR) gets a leading quote. For a list built in the browser; pair with pickExportColumns so it follows the visible columns.
  */
 export function toCsv<T, C>(columns: ExportColumn<T, C>[], rows: T[]): string {
   const cell = (v: unknown) => {
-    const s = v == null ? "" : String(v);
+    let s = v == null ? "" : String(v);
+    // A spreadsheet runs a text cell that starts with = + - @ tab or CR as a formula (a row named "=HYPERLINK(...)"
+    // would execute on open). A leading quote keeps it text. A real number (-5) is not a formula, so only text is
+    // prefixed.
+    if (typeof v !== "number" && /^[=+\-@\t\r]/.test(s)) s = `'${s}`;
     return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
   };
   return [columns.map((c) => cell(c.header)).join(","), ...rows.map((r) => columns.map((c) => cell(c.value(r))).join(","))].join("\n");

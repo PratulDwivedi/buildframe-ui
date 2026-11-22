@@ -74,4 +74,28 @@ describe("toCsv", () => {
     ];
     expect(toCsv(cols, [{ n: 'Say "hi"', v: 5 }, { n: "a\nb", v: null }])).toBe('Name,"Value, INR"\n"Say ""hi""",5\n"a\nb",');
   });
+
+  describe("formula safety (a spreadsheet runs a cell that starts with = + - @ tab or CR)", () => {
+    type R = { v: string | number | boolean | null };
+    const one = (v: R["v"]) => toCsv<R, R["v"]>([{ header: "H", value: (r) => r.v }], [{ v }]).split("\n")[1];
+
+    it.each(["=HYPERLINK(\"http://x\",\"y\")", "+1+1", "-2+3", "@SUM(A1)", "\tcmd", "\rcmd"])("prefixes text %j with a quote so it stays text", (v) => {
+      expect(one(v).replace(/^"/, "")).toMatch(/^'/);
+    });
+    it("still quotes a formula cell that also holds a comma", () => {
+      expect(one("=A1,B1")).toBe("\"'=A1,B1\"");
+    });
+    it("leaves a real negative number and a boolean alone, but prefixes the same digits typed as text", () => {
+      expect(one(-5)).toBe("-5");
+      expect(one(true)).toBe("true");
+      expect(one("-5")).toBe("'-5");
+    });
+    it("leaves text that only contains those characters later, and an e-mail address, alone", () => {
+      expect(one("a=b")).toBe("a=b");
+      expect(one("me@x.com")).toBe("me@x.com");
+    });
+    it("protects a header cell as well", () => {
+      expect(toCsv([{ header: "=bad", value: () => "x" }], [{}]).split("\n")[0]).toBe("'=bad");
+    });
+  });
 });

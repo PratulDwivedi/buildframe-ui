@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.10.1 (unreleased)
+
+`toCsv` (the browser export behind `downloadCsv` and every `DataTable` download) no longer lets a spreadsheet run a cell as a formula.
+
+- **Fix:** a text cell, or a header, that starts with `=`, `+`, `-`, `@`, a tab or a carriage return gets a leading quote, so a row named `=HYPERLINK(...)` opens as text instead of executing. Real numbers (`-5`) and booleans are left alone; text that merely contains those characters later (an e-mail address) is unchanged. The server-side exports in the products already did this; the shared one did not.
+- **Behaviour change to know about:** a text cell such as `-5` now reads `'-5` in the file (a spreadsheet shows it as `-5` text). Pass a number, not a string, when a column is numeric.
+- Tests first: 10 new, 306 in all. Four deliberate breaks (numbers prefixed too, CR not protected, `@` not protected, header unprotected) each fail a named test.
+- Not changed: the BOM and CRLF line endings that the server-side exports write; this export still uses `\n` and no BOM.
+
 ## 0.10.0 (2026-11-21)
 
 One look for every stat tile. Until now each page and product chose its own layout (stacked, inline or corner) and wrote its own adapter, so the same component looked different everywhere.
