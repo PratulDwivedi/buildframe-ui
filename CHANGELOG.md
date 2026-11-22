@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.11.1 (2026-11-22)
+
+Three small fixes to the server-side files of 0.11.0, found by the first independent review of a product that uses them. No product had a failing file; each case needed an unusual value.
+
+- `toXlsxFile`: the sheet name is cut to 31 characters **before** it is escaped (it was cut after, so a name with `&` near the end could be left as `&am`, which Excel reports as a corrupt file). The characters Excel forbids in a sheet name (`[ ] : * ? / \`) are removed, and a name with nothing left is `Export`.
+- `toXlsxFile`: a number that is `NaN` or `Infinity` is written as an empty cell (it was written as `<v>NaN</v>`, which is not valid). `csvCell`, and so both CSV writers, prints it as an empty cell too (it printed the word).
+- Tests first: 4 new, 343 in all, four deliberate breaks each failing a named test. One existing test asserted the old, wrong order (the escaped name at most 31 characters); it now checks the name as written.
+
 ## 0.11.0 (2026-11-22)
 
 CSV and Excel downloads, in one place, and safe to open. Three products each carried their own copy of the server-side files; the browser export had no protection against formulas at all.

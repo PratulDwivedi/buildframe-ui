@@ -72,6 +72,12 @@ function readZip(buf: Buffer) {
   return files;
 }
 
+describe('toCsv numbers', () => {
+  it('writes NaN and Infinity as empty cells, like the spreadsheet file', () => {
+    expect(csv(['a', 'b', 'c'], [[NaN, Infinity, 2]])).toBe(`${BOM}a,b,c\r\n,,2\r\n`);
+  });
+});
+
 describe('toXlsx', () => {
   it('is a valid stored zip with the six parts a spreadsheet needs, every CRC matching', () => {
     const files = readZip(toXlsx('Sheet', ['A', 'B'], [['x', 1]]));
@@ -110,11 +116,29 @@ describe('toXlsx', () => {
     expect(sheet).toContain('r="AA1"');
     expect(sheet).toContain('r="AB1"');
   });
-  it('limits a sheet name to 31 characters and escapes it', () => {
+  it('limits a sheet name to 31 characters (as written, before escaping) and escapes it', () => {
     const wb = readZip(toXlsx('A&B' + 'x'.repeat(40), ['h'], []))['xl/workbook.xml'];
     const name = /<sheet name="([^"]*)"/.exec(wb)![1];
-    expect(name.length).toBeLessThanOrEqual(31);
+    expect(name.replace(/&amp;/g, '&').length).toBe(31);
     expect(name.startsWith('A&amp;B')).toBe(true);
+  });
+  // Review findings 2 and 3.
+  it('cuts the sheet name before escaping, so an entity is never split', () => {
+    const wb = readZip(toXlsx('x'.repeat(28) + '&Co', ['h'], []))['xl/workbook.xml'];
+    const name = /<sheet name="([^"]*)"/.exec(wb)![1];
+    expect(name).toBe('x'.repeat(28) + '&amp;Co');
+    expect(name).not.toMatch(/&[a-z]*$/);
+  });
+  it('removes the characters Excel forbids in a sheet name and falls back when nothing is left', () => {
+    const name = (n: string) => /<sheet name="([^"]*)"/.exec(readZip(toXlsx(n, ['h'], []))['xl/workbook.xml'])![1];
+    expect(name('Q1: [draft]/final*?\\')).toBe('Q1 draftfinal');
+    expect(name('[]:*?/\\')).toBe('Export');
+    expect(name('')).toBe('Export');
+  });
+  it('writes a number that is not finite as an empty cell, never as invalid XML', () => {
+    const sheet = readZip(toXlsx('S', ['a', 'b', 'c'], [[NaN, Infinity, -Infinity]]))['xl/worksheets/sheet1.xml'];
+    expect(sheet).toContain('<c r="A2"/><c r="B2"/><c r="C2"/>');
+    expect(sheet).not.toMatch(/NaN|Infinity/);
   });
   it('keeps column widths between 10 and 48', () => {
     const sheet = readZip(toXlsx('S', ['a', 'b'], [['x'.repeat(200), 'y']]))['xl/worksheets/sheet1.xml'];

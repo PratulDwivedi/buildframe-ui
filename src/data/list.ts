@@ -189,7 +189,7 @@ export function pickExportColumns<T, C>(all: ExportColumn<T, C>[], cols: string 
  * below and the server-side files in `@buildframe/ui/server`.
  */
 export function csvCell(v: unknown): string {
-  let s = v == null ? "" : String(v);
+  let s = v == null || (typeof v === "number" && !Number.isFinite(v)) ? "" : String(v);
   if (typeof v !== "number" && /^[=+\-@\t\r]/.test(s)) s = `'${s}`;
   return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
