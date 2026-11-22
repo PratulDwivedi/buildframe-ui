@@ -35,6 +35,7 @@ Dark mode follows `.dark` on `<html>`. To also follow the device, put `data-bf-t
 |---|---|---|
 | `@buildframe/ui` | components (`Combobox`, `MultiCombobox`, `DataTable`, `SlideOver`, `SlideOverForm`, `Button`, `Field`, `StatusPill` ...) | client components |
 | `@buildframe/ui/core` | `parseList`, `applyList`, `pickExportColumns`, `toCsv`, `brandCss` ... | anywhere, incl. route handlers |
+| `@buildframe/ui/server` | `callRpc`, `createBf`, `createGoogleSignIn`, and CSV / Excel download files (`toCsvFile`, `toXlsxFile`, `fileResponse`) | route handlers and server code only (uses Node) |
 | `@buildframe/ui/editor` | `HtmlEditor`, `sanitizeHtml`, `formatHtml` | client components |
 | `@buildframe/ui/theme.css` | `bf-*` colour tokens, light and dark | CSS |
 | `@buildframe/ui/rich-text.css` | `.bf-rich-text` for html written in the editor, and the editor's own styles | CSS |

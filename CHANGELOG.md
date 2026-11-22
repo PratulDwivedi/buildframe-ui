@@ -1,13 +1,16 @@
 # Changelog
 
-## 0.10.1 (unreleased)
+## 0.11.0 (unreleased)
 
-`toCsv` (the browser export behind `downloadCsv` and every `DataTable` download) no longer lets a spreadsheet run a cell as a formula.
+CSV and Excel downloads, in one place, and safe to open. Three products each carried their own copy of the server-side files; the browser export had no protection against formulas at all.
 
-- **Fix:** a text cell, or a header, that starts with `=`, `+`, `-`, `@`, a tab or a carriage return gets a leading quote, so a row named `=HYPERLINK(...)` opens as text instead of executing. Real numbers (`-5`) and booleans are left alone; text that merely contains those characters later (an e-mail address) is unchanged. The server-side exports in the products already did this; the shared one did not.
-- **Behaviour change to know about:** a text cell such as `-5` now reads `'-5` in the file (a spreadsheet shows it as `-5` text). Pass a number, not a string, when a column is numeric.
-- Tests first: 10 new, 306 in all. Four deliberate breaks (numbers prefixed too, CR not protected, `@` not protected, header unprotected) each fail a named test.
-- Not changed: the BOM and CRLF line endings that the server-side exports write; this export still uses `\n` and no BOM.
+- **Fix, `toCsv` (browser export behind `downloadCsv` and every `DataTable` download):** a text cell, or a header, that starts with `=`, `+`, `-`, `@`, a tab or a carriage return gets a leading quote, so a row named `=HYPERLINK(...)` opens as text instead of executing. Real numbers (`-5`) and booleans are left alone; text that merely contains those characters later (an e-mail address) is unchanged. **Behaviour change to know about:** a text cell such as `"-5"` now reads `'-5` in the file; pass a number, not a string, when a column is numeric. The rule lives in one exported function, `csvCell`, which the server files below use too.
+- **New, `@buildframe/ui/server`:** `toCsvFile(header, body)` (RFC 4180, CRLF, a UTF-8 byte-order mark so Excel reads non-ASCII text), `toXlsxFile(sheet, header, body)` (a dependency-free `.xlsx`: stored zip, escaped XML, control characters dropped, formulas never written, widths 10 to 48, sheet name cut to 31) and `fileResponse(format, baseName, header, body, { sheet?, cols?, ties? })`, the download `Response` every export route returns (right type, dated file name, `no-store`). The files are the ones account and Ecomm already shipped, moved here unchanged apart from sharing `csvCell`.
+- **`ties` stays with the product.** With the table's `?cols=` the file keeps only the columns the person can see, in their order. Which export column belongs to which table column is product knowledge: each screen passes its own map (header text to column key; `"*"` ties every unlisted header to one column). A product keeps a small file with its maps and a thin `fileResponse` wrapper, so its routes do not change.
+- Node only (`node:zlib` `crc32`): import it from route handlers and server code, never from a client component. It is not in `core`, so client bundles are unaffected.
+- Tests first: 43 new, 339 in all (the 31 account tests for these files ported here, plus the formula guard). Eight deliberate breaks (numbers prefixed, CR unprotected, checksum zero, wildcard tie dropped, byte-order mark removed, `&` unescaped, sheet name ignored) each fail a named test; one change to the `cols` guard proved equivalent, because `pickExportColumns` already returns every column for an empty value.
+- Proved in two products before release: account's 31 export tests pass unchanged through a wrapper over this code, and account and Ecomm both pass `npm run check` and a production build against it.
+- Not covered: opening the files in Excel, Numbers or Sheets (the zip is checked structurally, every checksum recomputed).
 
 ## 0.10.0 (2026-11-21)
 

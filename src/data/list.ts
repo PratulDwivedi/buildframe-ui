@@ -183,17 +183,21 @@ export function pickExportColumns<T, C>(all: ExportColumn<T, C>[], cols: string 
 }
 
 /**
- * CSV text from export columns and rows: every cell quoted when it holds a comma, quote or line break, a header
- * row first; text that a spreadsheet would run as a formula (a leading = + - @ tab or CR) gets a leading quote. For a list built in the browser; pair with pickExportColumns so it follows the visible columns.
+ * One CSV cell: quoted when it holds a comma, quote or line break; and, for text that a spreadsheet would run as a
+ * formula (a leading = + - @ tab or CR), prefixed with a quote so it stays text (a row named "=HYPERLINK(...)" would
+ * execute on open). A real number (-5) is not a formula, so only text is prefixed. Shared by the browser `toCsv`
+ * below and the server-side files in `@buildframe/ui/server`.
+ */
+export function csvCell(v: unknown): string {
+  let s = v == null ? "" : String(v);
+  if (typeof v !== "number" && /^[=+\-@\t\r]/.test(s)) s = `'${s}`;
+  return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
+/**
+ * CSV text from export columns and rows: a header row first, every cell through `csvCell`. For a list built in the
+ * browser; pair with pickExportColumns so it follows the visible columns.
  */
 export function toCsv<T, C>(columns: ExportColumn<T, C>[], rows: T[]): string {
-  const cell = (v: unknown) => {
-    let s = v == null ? "" : String(v);
-    // A spreadsheet runs a text cell that starts with = + - @ tab or CR as a formula (a row named "=HYPERLINK(...)"
-    // would execute on open). A leading quote keeps it text. A real number (-5) is not a formula, so only text is
-    // prefixed.
-    if (typeof v !== "number" && /^[=+\-@\t\r]/.test(s)) s = `'${s}`;
-    return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
-  };
-  return [columns.map((c) => cell(c.header)).join(","), ...rows.map((r) => columns.map((c) => cell(c.value(r))).join(","))].join("\n");
+  return [columns.map((c) => csvCell(c.header)).join(","), ...rows.map((r) => columns.map((c) => csvCell(c.value(r))).join(","))].join("\n");
 }
