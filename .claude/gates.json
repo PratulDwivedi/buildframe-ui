@@ -1,0 +1,40 @@
+{
+  "secret_paths": [
+    ".env",
+    ".env.local",
+    ".env.*.local",
+    ".env.production*"
+  ],
+  "test_lock": {
+    "globs": [
+      "*.test.ts",
+      "*.test.tsx"
+    ],
+    "env": "GATES_TEST_LOCK"
+  },
+  "bash_rules": [
+    {
+      "pattern": "git\\s+push",
+      "action": "ask",
+      "reason": "A push needs a person's go. Set PUSH_APPROVAL to who approved it, then retry.",
+      "approval_env": "PUSH_APPROVAL"
+    },
+    {
+      "pattern": "\\bvercel\\b.*(--prod|deploy)",
+      "action": "ask",
+      "reason": "Production deploys need a named release authorisation. Set RELEASE_APPROVAL to who approved it, then retry.",
+      "approval_env": "RELEASE_APPROVAL"
+    },
+    {
+      "pattern": "supabase\\s+(db\\s+push|migration\\s+up)",
+      "action": "ask",
+      "reason": "Applying a migration needs the dry run approved. Set MIGRATION_APPROVAL to who approved it, then retry.",
+      "approval_env": "MIGRATION_APPROVAL"
+    },
+    {
+      "pattern": "\\brm\\s+-rf\\s+/",
+      "action": "deny",
+      "reason": "Never delete from the root."
+    }
+  ]
+}

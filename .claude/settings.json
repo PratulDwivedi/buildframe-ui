@@ -1,0 +1,13 @@
+{
+  "extraKnownMarketplaces": {
+    "buildframe-standards": {
+      "source": {
+        "source": "github",
+        "repo": "PratulDwivedi/buildframe-standards"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "ai-native-framework@buildframe-standards": true
+  }
+}
