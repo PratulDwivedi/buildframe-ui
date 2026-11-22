@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.11.0 (unreleased)
+## 0.11.0 (2026-11-22)
 
 CSV and Excel downloads, in one place, and safe to open. Three products each carried their own copy of the server-side files; the browser export had no protection against formulas at all.
 
