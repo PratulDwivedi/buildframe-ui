@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.12.0 (2026-11-25)
+
+A tenant's Appearance screen, in one place. Two products already carried their own copy of this form; the third (a property portal) needed it, so it moves here.
+
+- **New, `@buildframe/ui/site`:** `AppearanceForm` (logo, favicon, primary colour, primary in dark mode, accent colour, default mode, show the name beside the logo, show the light/dark switch, and any number of default pictures by slot, with a live sample), `AppearanceSample`, `ColorField` (picker and hex together, blank allowed).
+- **What the product supplies:** `onSave(value)` answering `{ error }` (its own server action) and `renderImage(slot)` (its own picture upload, because where pictures are stored differs by product). Nothing in the form knows a table, a bucket or a product.
+- **Same checks on the server:** `appearanceErrors`, `brandFromAppearance`, `emptyAppearance`, `APPEARANCE_MODES` are plain functions, also exported from `@buildframe/ui/core`. A colour is a six-digit hex or blank; the logo, favicon and default pictures are https addresses or blank; the mode is `system`, `light` or `dark`.
+- **`themeInitScript(key, defaultMode?)`:** an optional second argument, `"light"` (the old behaviour, still the default), `"dark"` or `"system"` (follow the device). It applies only until the visitor has switched; a stored choice always wins. Existing calls are unchanged.
+- Tests first: 16 new, 359 in all. Four deliberate breaks (hex check removed, sample text colour fixed, stored choice ignored, form saving despite errors) each fail a named test.
+- Not checked: the form in a real browser at 400px and in dark mode (no playground yet, G6); the product's picture upload inside it.
+
 ## 0.11.1 (2026-11-22)
 
 Three small fixes to the server-side files of 0.11.0, found by the first independent review of a product that uses them. No product had a failing file; each case needed an unusual value.
