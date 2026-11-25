@@ -1,5 +1,5 @@
 import * as React from "react";
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { AppearanceForm } from "../src/site/AppearanceForm";
 import { emptyAppearance, type AppearanceValue } from "../src/site/appearance";
@@ -65,7 +65,23 @@ it("saves exactly what was entered, including a picked picture and the switches"
     showToggle: true,
     images: { home: "https://cdn.example/home.png" },
   });
-  expect(await screen.findByText(/Saved/)).toBeInTheDocument();
+  expect(await screen.findByText(/Saved\./)).toBeInTheDocument();
+});
+
+it("the saved note goes away by itself after a few seconds", async () => {
+  vi.useFakeTimers({ shouldAdvanceTime: true });
+  try {
+    setup();
+    await userEvent.click(screen.getByRole("button", { name: "Save appearance" }));
+    expect(await screen.findByText(/Saved\./)).toBeInTheDocument();
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(4000);
+    });
+    expect(screen.queryByText(/Saved\./)).toBeNull();
+    expect(screen.getByRole("button", { name: "Save appearance" })).toBeInTheDocument();
+  } finally {
+    vi.useRealTimers();
+  }
 });
 
 it("shows the product's own error and keeps the form", async () => {

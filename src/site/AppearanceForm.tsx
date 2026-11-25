@@ -7,6 +7,7 @@ import { Card } from "../primitives/Status";
 import { Combobox } from "../combobox/Combobox";
 import { PageSaveAction } from "../shell/PageSaveAction";
 import { useHasPageHeader } from "../shell/page-header";
+import { useFlash } from "../lib/useFlash";
 import { ColorField } from "./ColorField";
 import { AppearanceSample } from "./AppearanceSample";
 import { APPEARANCE_MODES, appearanceErrors, type AppearanceMode, type AppearanceValue } from "./appearance";
@@ -50,11 +51,11 @@ export function AppearanceForm({
   const [f, setF] = React.useState<AppearanceValue>(value);
   const [errors, setErrors] = React.useState<Record<string, string>>({});
   const [error, setError] = React.useState<string | null>(null);
-  const [saved, setSaved] = React.useState(false);
+  const [saved, flashSaved, clearSaved] = useFlash(3500);
   const [pending, start] = React.useTransition();
 
   const set = <K extends keyof AppearanceValue>(k: K, v: AppearanceValue[K]) => {
-    setSaved(false);
+    clearSaved();
     setF((x) => ({ ...x, [k]: v }));
   };
 
@@ -67,7 +68,7 @@ export function AppearanceForm({
     start(async () => {
       const r = await onSave(f);
       if (r.error) setError(r.error);
-      else setSaved(true);
+      else flashSaved();
     });
   }
 

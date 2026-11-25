@@ -32,14 +32,18 @@ it("draws Save, then Refresh, then the page's help, in the topbar, tied to the f
   expect(buttons.at(-1)).toMatch(/help|\?/i);
 });
 
-it("shows a short Saved note beside the button, and a spinner state while pending", () => {
+it("turns the button itself into a green Saved for a moment, with a spoken note, and keeps it a submit button", () => {
   render(
     <PageHeaderProvider>
       <Slot />
-      <PageSaveAction formId="f1" label="Save appearance" saved pending />
+      <PageSaveAction formId="f1" label="Save appearance" saved />
     </PageHeaderProvider>,
   );
-  expect(within(screen.getByTestId("topbar")).getByRole("status")).toHaveTextContent("Saved");
+  const bar = screen.getByTestId("topbar");
+  const btn = within(bar).getByRole("button", { name: "Saved" });
+  expect(btn).toHaveAttribute("type", "submit");
+  expect(within(bar).queryByRole("button", { name: "Save appearance" })).toBeNull();
+  expect(within(bar).getByRole("status")).toHaveTextContent("Saved");
 });
 
 it("outside a page header it draws in place, so a form still has a Save button", () => {

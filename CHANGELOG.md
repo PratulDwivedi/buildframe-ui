@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.12.2 (2026-11-25)
+
+"Saved" no longer sits in the header until the next change.
+
+- **`PageSaveAction`:** when `saved` is true the button itself turns into a green "Saved" with a tick (spoken "Saved" for screen readers), so the answer is where the eye already is. The separate "Saved" word beside the button is gone.
+- **New `useFlash(ms)`:** `const [on, flash, clear] = useFlash(3500)`, a message that shows for a moment and clears itself (a second `flash()` restarts the time; cleaned up on unmount). `AppearanceForm` uses it, so the button and the "Saved. Visitors see it on the next page load." line both go away after about 3.5 seconds, and editing a field clears them at once.
+- Tests first: 3 new, 366 in all.
+- Not checked: how the green button looks in dark mode at 400px.
+
 ## 0.12.1 (2026-11-25)
 
 Save goes where the house puts it: the page header, top right.
