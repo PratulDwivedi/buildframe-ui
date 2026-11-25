@@ -7,3 +7,4 @@ export { CATEGORY_COUNT, categoryOf, categoryStyle } from "./lib/category";
 export { themeInitScript, type ThemeDefault } from "./theme/init";
 export { APPEARANCE_MODES, appearanceErrors, brandFromAppearance, emptyAppearance, isAppearanceMode, type AppearanceMode, type AppearanceValue } from "./site/appearance";
 export { initials, type AvatarUser } from "./people/initials";
+export { LINK_LIMITS, SOCIAL_NETWORKS, cleanFooter, cleanLinks, emptyFooter, footerErrors, hrefError, menuErrors, socialUrlError, type FooterGroup, type FooterValue, type NavLink, type SocialLink, type SocialNetwork } from "./site/links";

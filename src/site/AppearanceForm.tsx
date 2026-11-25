@@ -7,9 +7,9 @@ import { Card } from "../primitives/Status";
 import { Combobox } from "../combobox/Combobox";
 import { PageSaveAction } from "../shell/PageSaveAction";
 import { useHasPageHeader } from "../shell/page-header";
-import { useFlash } from "../lib/useFlash";
 import { ColorField } from "./ColorField";
 import { AppearanceSample } from "./AppearanceSample";
+import { useFormSave } from "./useFormSave";
 import { APPEARANCE_MODES, appearanceErrors, type AppearanceMode, type AppearanceValue } from "./appearance";
 
 export type ImageSlot = {
@@ -49,28 +49,12 @@ export function AppearanceForm({
 }) {
   const inTopbar = useHasPageHeader();
   const [f, setF] = React.useState<AppearanceValue>(value);
-  const [errors, setErrors] = React.useState<Record<string, string>>({});
-  const [error, setError] = React.useState<string | null>(null);
-  const [saved, flashSaved, clearSaved] = useFlash(3500);
-  const [pending, start] = React.useTransition();
+  const { errors, error, saved, pending, submit, touch } = useFormSave({ validate: () => appearanceErrors(f), save: () => onSave(f) });
 
   const set = <K extends keyof AppearanceValue>(k: K, v: AppearanceValue[K]) => {
-    clearSaved();
+    touch();
     setF((x) => ({ ...x, [k]: v }));
   };
-
-  function submit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    const found = appearanceErrors(f);
-    setErrors(found);
-    if (Object.keys(found).length > 0) return;
-    start(async () => {
-      const r = await onSave(f);
-      if (r.error) setError(r.error);
-      else flashSaved();
-    });
-  }
 
   return (
     <form id={formId} onSubmit={submit} noValidate className="space-y-4">

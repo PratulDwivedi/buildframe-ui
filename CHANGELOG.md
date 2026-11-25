@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.13.0 (2026-11-25)
+
+A tenant's header menu and footer, in one place (`@buildframe/ui/site`), after the Appearance form.
+
+- **New `FooterForm`:** text under the logo, a closing line, up to 5 columns of up to 12 links (reorder with up and down, remove, add), and up to 6 social links, one per network (Instagram, Facebook, X, YouTube, LinkedIn). **New `MenuForm`:** up to 6 header links. Both use the new **`LinkRows`** (the words, the address and an "Or pick" list of the product's own pages that fills both in; a row stacks on a phone). The product passes `linkOptions` (its pages) and `onSave`; Save sits in the page header (`PageSaveAction`) and "Saved" flashes (`useFlash`).
+- **No phone number can be a link:** `hrefError` accepts only a path of the site (`/about`), an `https://` address or `mailto:`. `tel:`, `sms:`, `javascript:`, `data:`, protocol-relative (`//host`), backslash paths and every other scheme are refused, and so are `wa.me` and WhatsApp web addresses. `socialUrlError` needs https on the network's own domain (`instagram.com.evil.example` is refused); there is no WhatsApp network.
+- **Same checks on the server and on a public page:** `menuErrors`, `footerErrors`, `hrefError`, `socialUrlError`, `LINK_LIMITS` and `SOCIAL_NETWORKS` are plain functions (also in `@buildframe/ui/core`). **`cleanLinks` and `cleanFooter`** read stored data defensively for drawing a page: bad links, repeated or unknown networks and anything over the limits are dropped, never thrown.
+- **New `useFormSave`:** the save flow the site editors share (check, call `save`, show the error, flash "saved"). `AppearanceForm` now uses it too; its behaviour is unchanged.
+- Tests first: 49 new, 415 in all. Four deliberate breaks (phone links allowed, WhatsApp hosts allowed, validation skipped on save, repeated network allowed) each fail named tests.
+- Not checked: the forms in a real browser at 400px and in dark mode (no playground yet, G6); reordering by keyboard beyond the buttons.
+
 ## 0.12.2 (2026-11-25)
 
 "Saved" no longer sits in the header until the next change.
