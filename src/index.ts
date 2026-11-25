@@ -39,6 +39,7 @@ export { HelpSection, HelpSteps } from "./help/sections";
 // Shell
 export { PageHeaderProvider, PageHeader, PageActions, usePageHeader, usePageActionsSlot, useHasPageHeader, type PageHeaderValue } from "./shell/page-header";
 
+export { PageSaveAction } from "./shell/PageSaveAction";
 export { NavProgressProvider, LinkPending, useNavProgress } from "./shell/NavProgress";
 
 // Theming

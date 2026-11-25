@@ -17,6 +17,7 @@ header, app shell, auth forms, theme, rich-text editor, `@buildframe/ui/server`)
 - Test first. Behaviour that only a browser shows (focus trap, keyboard handling in SlideOver, Menu, Combobox) is tested in
   unit tests only until the playground (docs/plan.md G6) exists, so say what was not checked.
 - Phone first: check at ~400px and desktop, light and dark. Every dropdown is the Combobox. No em or en dashes in copy.
+- A form screen puts its Save in the page header, top right, with `PageSaveAction` (Save, Refresh, then the help "?"); never at the bottom of the form.
 - Colour is defined once, here (`theme.css`, `family.css`). Apps do not redeclare these names.
 - A release is a tag plus a CHANGELOG entry. Do not tag or push without Pratul's go.
 

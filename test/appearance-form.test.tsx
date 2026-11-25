@@ -1,8 +1,15 @@
 import * as React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { AppearanceForm } from "../src/site/AppearanceForm";
 import { emptyAppearance, type AppearanceValue } from "../src/site/appearance";
+import { PageHeaderProvider, usePageActionsSlot } from "../src/shell/page-header";
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn(), replace: vi.fn(), refresh: vi.fn(), back: vi.fn() }),
+  usePathname: () => "/admin/x",
+  useSearchParams: () => new URLSearchParams(),
+}));
 
 const slots = [{ key: "home", label: "Home banner", hint: "Used when no banner has a picture." }];
 
@@ -72,4 +79,26 @@ it("the sample uses the chosen colour with readable text", async () => {
   await userEvent.type(screen.getByLabelText("Primary colour"), "#facc15");
   const btn = screen.getByText("Primary button");
   expect(btn).toHaveStyle({ background: "#facc15", color: "#111111" });
+});
+
+describe("inside a page header", () => {
+  it("puts Save in the topbar, once, and still saves what was entered", async () => {
+    const save = vi.fn(async (_v: AppearanceValue) => ({ error: null as string | null }));
+    function Slot() {
+      const set = usePageActionsSlot();
+      return <div data-testid="topbar" ref={set} />;
+    }
+    render(
+      <PageHeaderProvider>
+        <Slot />
+        <AppearanceForm value={emptyAppearance()} name="Acme Realty" onSave={save} renderImage={() => null} />
+      </PageHeaderProvider>,
+    );
+    const bar = await screen.findByTestId("topbar");
+    const buttons = within(bar).getAllByRole("button", { name: "Save appearance" });
+    expect(buttons).toHaveLength(1);
+    expect(screen.getAllByRole("button", { name: "Save appearance" })).toHaveLength(1);
+    await userEvent.click(buttons[0]!);
+    await waitFor(() => expect(save).toHaveBeenCalledTimes(1));
+  });
 });

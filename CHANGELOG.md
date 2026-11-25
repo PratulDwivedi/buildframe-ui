@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.12.1 (2026-11-25)
+
+Save goes where the house puts it: the page header, top right.
+
+- **New `PageSaveAction`:** a form's Save button drawn in the page header (`type="submit"` tied to the form by `form={formId}`), with a short "Saved" beside it and a Refresh icon after it. With the page's `PageHeader` declared after the form, the order is Save, Refresh, then the "?" help. Outside a `PageHeaderProvider` it draws in place.
+- **`AppearanceForm` uses it** when the page has a header (new optional `formId`, default `appearance-form`); without one the button stays under the form, as in 0.12.0. Nothing else changes.
+- **House practice:** a form screen puts its Save in the page header through `PageSaveAction`, not at the bottom of the form. Other forms move onto it as they are next touched.
+- Tests first: 4 new, 363 in all; a deliberate break (the form never uses the header) fails a named test.
+- Not checked: the header at 400px (the buttons share the row with the title).
+
 ## 0.12.0 (2026-11-25)
 
 A tenant's Appearance screen, in one place. Two products already carried their own copy of this form; the third (a property portal) needed it, so it moves here.

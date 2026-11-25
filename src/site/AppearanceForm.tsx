@@ -5,6 +5,8 @@ import { Button } from "../primitives/Button";
 import { Checkbox, Field, FormError, FormNotice } from "../primitives/Field";
 import { Card } from "../primitives/Status";
 import { Combobox } from "../combobox/Combobox";
+import { PageSaveAction } from "../shell/PageSaveAction";
+import { useHasPageHeader } from "../shell/page-header";
 import { ColorField } from "./ColorField";
 import { AppearanceSample } from "./AppearanceSample";
 import { APPEARANCE_MODES, appearanceErrors, type AppearanceMode, type AppearanceValue } from "./appearance";
@@ -22,7 +24,8 @@ export type PictureSlot = { key: string; label: string; hint?: string };
 /**
  * A tenant's Appearance screen: logo, favicon, colours, default mode, two switches and default pictures, with a live sample. The product
  * supplies what is its own: `onSave` (its server action, answering `{ error }`) and `renderImage` (its picture upload, because where
- * pictures go differs by product). The same checks as `appearanceErrors` run before `onSave` is called.
+ * pictures go differs by product). The same checks as `appearanceErrors` run before `onSave` is called. Inside a page header the Save button is
+ * drawn there, top right (the house place, `PageSaveAction`); without one it sits under the form.
  */
 export function AppearanceForm({
   value,
@@ -31,6 +34,7 @@ export function AppearanceForm({
   onSave,
   renderImage,
   saveLabel = "Save appearance",
+  formId = "appearance-form",
 }: {
   value: AppearanceValue;
   /** The tenant's name, for the sample. */
@@ -39,7 +43,10 @@ export function AppearanceForm({
   onSave: (v: AppearanceValue) => Promise<{ error: string | null }>;
   renderImage: (slot: ImageSlot) => React.ReactNode;
   saveLabel?: string;
+  /** The form's id, which the header Save button points at. */
+  formId?: string;
 }) {
+  const inTopbar = useHasPageHeader();
   const [f, setF] = React.useState<AppearanceValue>(value);
   const [errors, setErrors] = React.useState<Record<string, string>>({});
   const [error, setError] = React.useState<string | null>(null);
@@ -65,7 +72,8 @@ export function AppearanceForm({
   }
 
   return (
-    <form onSubmit={submit} noValidate className="space-y-4">
+    <form id={formId} onSubmit={submit} noValidate className="space-y-4">
+      {inTopbar ? <PageSaveAction formId={formId} label={saveLabel} pending={pending} saved={saved} /> : null}
       <div className="grid gap-4 lg:grid-cols-2">
         <Card className="space-y-5 p-5">
           <h2 className="text-sm font-semibold">Brand</h2>
@@ -117,9 +125,11 @@ export function AppearanceForm({
 
       <FormError message={error} />
       {saved ? <FormNotice message="Saved. Visitors see it on the next page load." /> : null}
-      <Button type="submit" variant="primary" pending={pending}>
-        {saveLabel}
-      </Button>
+      {inTopbar ? null : (
+        <Button type="submit" variant="primary" pending={pending}>
+          {saveLabel}
+        </Button>
+      )}
     </form>
   );
 }
