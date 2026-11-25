@@ -32,12 +32,15 @@ export function FooterForm({
   onSave,
   saveLabel = "Save footer",
   formId = "footer-form",
+  children,
 }: {
   value: FooterValue;
   linkOptions: ComboOption[];
   onSave: (f: FooterValue) => Promise<{ error: string | null }>;
   saveLabel?: string;
   formId?: string;
+  /** The product's own sections (for example a chat button), drawn inside the form after the social links, so one Save covers them. The product's `onSave` saves them. */
+  children?: React.ReactNode;
 }) {
   const inTopbar = useHasPageHeader();
   const [f, setF] = React.useState<FooterValue>(value);
@@ -57,7 +60,15 @@ export function FooterForm({
   };
   const setSocial = (social: SocialLink[]) => set({ social });
   const patchSocial = (i: number, p: Partial<SocialLink>) => setSocial(f.social.map((s, k) => (k === i ? { ...s, ...p } : s)));
-  const nextNetwork = (): SocialNetwork => SOCIAL_NETWORKS.find((n) => !f.social.some((s) => s.network === n.value))?.value ?? "instagram";
+  const moveSocial = (i: number, d: -1 | 1) => {
+    const j = i + d;
+    if (j < 0 || j >= f.social.length) return;
+    const n = [...f.social];
+    [n[i], n[j]] = [n[j]!, n[i]!];
+    setSocial(n);
+  };
+  // A new row starts on the first network not yet used, so a first footer reads Instagram, Facebook... and a repeat is a choice.
+  const nextNetwork = (): SocialNetwork => SOCIAL_NETWORKS.find((n) => !f.social.some((s) => s.network === n.value))?.value ?? f.social.at(-1)?.network ?? "instagram";
 
   return (
     <form id={formId} onSubmit={submit} noValidate className="space-y-4">
@@ -104,7 +115,7 @@ export function FooterForm({
       <Card className="space-y-4 p-5">
         <div>
           <h2 className="text-sm font-semibold">Social links</h2>
-          <p className="mt-1 text-xs text-bf-muted">The round icons under your name. Use the full https address of your page, one for each network.</p>
+          <p className="mt-1 text-xs text-bf-muted">The round icons under your name, in the order shown here. Use the full https address of each page. You can add several of one network, up to {LINK_LIMITS.social} links.</p>
         </div>
         {f.social.map((s, i) => (
           <div key={i} className="grid grid-cols-1 gap-2 sm:grid-cols-[11rem_1fr_auto] sm:items-start">
@@ -112,7 +123,11 @@ export function FooterForm({
             <Field label="" error={errors[`social:${i}`]}>
               <Input aria-label="Social address" value={s.url} onChange={(e) => patchSocial(i, { url: e.target.value })} placeholder="https://www.instagram.com/yourpage" maxLength={500} aria-invalid={errors[`social:${i}`] ? true : undefined} />
             </Field>
-            <IconButton icon={<Trash2Icon />} label="Remove social link" onClick={() => setSocial(f.social.filter((_, k) => k !== i))} type="button" />
+            <div className="flex items-center gap-1">
+              <IconButton icon={<ArrowUpIcon />} label="Move social link up" disabled={i === 0} onClick={() => moveSocial(i, -1)} type="button" />
+              <IconButton icon={<ArrowDownIcon />} label="Move social link down" disabled={i === f.social.length - 1} onClick={() => moveSocial(i, 1)} type="button" />
+              <IconButton icon={<Trash2Icon />} label="Remove social link" onClick={() => setSocial(f.social.filter((_, k) => k !== i))} type="button" />
+            </div>
           </div>
         ))}
         {errors.social ? <p className="text-xs text-bf-danger-ink">{errors.social}</p> : null}
@@ -121,6 +136,8 @@ export function FooterForm({
           Add a social link
         </Button>
       </Card>
+
+      {children}
 
       <FormError message={error} />
       {saved ? <FormNotice message="Saved. Visitors see it on the next page load." /> : null}

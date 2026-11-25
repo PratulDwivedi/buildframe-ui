@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.14.0 (2026-11-25)
+
+The footer's social links: several of one network, in an order the merchant chooses.
+
+- **`FooterForm`:** up to **10** social links (was 6), several of the same network allowed (for example a company page and a project page), and an up and down button on each row (`Move social link up` and `Move social link down`; the first cannot move up, the last cannot move down). A new row starts on the first network not yet used, and repeats the last one once all five are in use. The hint text says so.
+- **`footerErrors`:** the "One link for each network" error is gone and `LINK_LIMITS.social` is 10; every address is still https on its own network's domain, and a `wa.me` or phone address is still refused on any row.
+- **`cleanFooter`:** keeps repeated networks, in the order stored, up to 10 (it used to keep only the first of each network).
+- **`FooterForm` takes `children`:** a product's own sections (for example a chat button card) are drawn inside the form after the social links, so the one Save in the page header covers them; the product's `onSave` saves them too.
+- Tests first: 6 new and 2 changed, 421 in all.
+- Not checked: the rows in a real browser at 400px and in dark mode (no playground yet, G6); reordering by keyboard beyond the buttons. A product on an older tag keeps its one-per-network rule until it re-pins.
+
 ## 0.13.0 (2026-11-25)
 
 A tenant's header menu and footer, in one place (`@buildframe/ui/site`), after the Appearance form.

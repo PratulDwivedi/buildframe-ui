@@ -17,7 +17,7 @@ export type SocialLink = { network: SocialNetwork; url: string };
 
 export type FooterValue = { about: string; closing: string; groups: FooterGroup[]; social: SocialLink[] };
 
-export const LINK_LIMITS = { menu: 6, groups: 5, groupLinks: 12, label: 40, title: 30, about: 240, closing: 120, social: 6, path: 200, https: 500, mailto: 200 } as const;
+export const LINK_LIMITS = { menu: 6, groups: 5, groupLinks: 12, label: 40, title: 30, about: 240, closing: 120, social: 10, path: 200, https: 500, mailto: 200 } as const;
 
 export const emptyFooter = (): FooterValue => ({ about: "", closing: "", groups: [], social: [] });
 
@@ -87,12 +87,9 @@ export function footerErrors(f: FooterValue): Record<string, string> {
     });
   });
   if (f.social.length > LINK_LIMITS.social) e.social = `At most ${LINK_LIMITS.social} social links`;
-  const seen = new Set<string>();
   f.social.forEach((s, i) => {
     const bad = socialUrlError(s.network, s.url);
     if (bad) e[`social:${i}`] = bad;
-    else if (seen.has(s.network)) e[`social:${i}`] = "One link for each network";
-    seen.add(s.network);
   });
   return e;
 }
@@ -114,7 +111,7 @@ export function cleanLinks(raw: unknown, max: number = LINK_LIMITS.groupLinks): 
   return out;
 }
 
-/** Reads a stored footer defensively: bad links, unknown or repeated networks, and anything over the limits are dropped. */
+/** Reads a stored footer defensively: bad links, unknown networks, and anything over the limits are dropped (several links of one network are kept, in order). */
 export function cleanFooter(raw: unknown): FooterValue {
   const o = obj(raw);
   const groups: FooterGroup[] = [];
@@ -132,7 +129,7 @@ export function cleanFooter(raw: unknown): FooterValue {
       const so = obj(s);
       const network = typeof so.network === "string" ? so.network : "";
       const url = typeof so.url === "string" ? so.url : "";
-      if (socialUrlError(network, url) === null && !social.some((x) => x.network === network)) social.push({ network: network as SocialNetwork, url });
+      if (socialUrlError(network, url) === null) social.push({ network: network as SocialNetwork, url });
       if (social.length >= LINK_LIMITS.social) break;
     }
   }

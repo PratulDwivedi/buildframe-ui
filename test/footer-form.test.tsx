@@ -85,6 +85,45 @@ describe("FooterForm", () => {
     expect(save.mock.calls[0]![0].social).toEqual([{ network: "instagram", url: "https://www.instagram.com/acme" }]);
   });
 
+  it("saves several links of one network, in the order they were put", async () => {
+    const save = footerSetup({ ...filled(), social: [{ network: "instagram", url: "https://www.instagram.com/acme" }, { network: "instagram", url: "https://www.instagram.com/acme.projects" }] });
+    await userEvent.click(screen.getAllByRole("button", { name: "Move social link up" })[1]!);
+    await userEvent.click(screen.getByRole("button", { name: "Save footer" }));
+    await waitFor(() => expect(save).toHaveBeenCalledTimes(1));
+    expect(save.mock.calls[0]![0].social.map((s: { url: string }) => s.url)).toEqual(["https://www.instagram.com/acme.projects", "https://www.instagram.com/acme"]);
+  });
+
+  it("a new social row starts on an unused network, then repeats the last one when all are used", async () => {
+    footerSetup({ ...filled(), social: [{ network: "instagram", url: "https://instagram.com/a" }] });
+    await userEvent.click(screen.getByRole("button", { name: "Add a social link" }));
+    expect(screen.getAllByLabelText("Network")).toHaveLength(2);
+  });
+
+  it("the first social link cannot move up and the last cannot move down", async () => {
+    footerSetup({ ...filled(), social: [{ network: "instagram", url: "https://instagram.com/a" }, { network: "facebook", url: "https://facebook.com/a" }] });
+    expect(screen.getAllByRole("button", { name: "Move social link up" })[0]).toBeDisabled();
+    expect(screen.getAllByRole("button", { name: "Move social link down" })[1]).toBeDisabled();
+    expect(screen.getAllByRole("button", { name: "Move social link down" })[0]).toBeEnabled();
+  });
+
+  it("offers up to 10 social links and then stops adding", async () => {
+    footerSetup({ ...filled(), social: Array.from({ length: 10 }, (_, i) => ({ network: "instagram" as const, url: `https://instagram.com/p${i}` })) });
+    expect(screen.getByRole("button", { name: "Add a social link" })).toBeDisabled();
+  });
+
+  it("shows a product's own sections inside the form, before the Save button, and saves them with the same Save", async () => {
+    const save = vi.fn(async (_v: FooterValue) => ({ error: null as string | null }));
+    render(
+      <FooterForm value={filled()} linkOptions={options} onSave={save}>
+        <section aria-label="Extra">Extra section</section>
+      </FooterForm>,
+    );
+    const extra = screen.getByLabelText("Extra");
+    expect(extra.closest("form")).not.toBeNull();
+    await userEvent.click(screen.getByRole("button", { name: "Save footer" }));
+    await waitFor(() => expect(save).toHaveBeenCalledTimes(1));
+  });
+
   it("the saved note goes away by itself", async () => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
     try {

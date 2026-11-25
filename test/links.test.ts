@@ -102,9 +102,19 @@ describe("footerErrors", () => {
     expect(e["group:0:link:1:href"]).toBeTruthy();
     expect(e["social:1"]).toBeTruthy();
   });
-  it("allows one link per social network and at most 6", () => {
+  it("allows several links of one social network, up to 10", () => {
     const f = good();
     f.social.push({ network: "instagram", url: "https://instagram.com/other" });
+    expect(footerErrors(f)["social:1"]).toBeUndefined();
+    expect(footerErrors(f).social).toBeUndefined();
+    while (f.social.length < 10) f.social.push({ network: "facebook", url: `https://facebook.com/p${f.social.length}` });
+    expect(footerErrors(f).social).toBeUndefined();
+    f.social.push({ network: "facebook", url: "https://facebook.com/eleven" });
+    expect(footerErrors(f).social).toMatch(/10/);
+  });
+  it("still refuses a bad address on a repeated network", () => {
+    const f = good();
+    f.social.push({ network: "instagram", url: "https://wa.me/919876543210" });
     expect(footerErrors(f)["social:1"]).toBeTruthy();
   });
 });
@@ -118,7 +128,7 @@ describe("cleanLinks and cleanFooter read stored data defensively", () => {
     expect(cleanLinks("nope")).toEqual([]);
     expect(cleanLinks(undefined)).toEqual([]);
   });
-  it("cleans a stored footer: bad links, a WhatsApp social link, extra groups and junk types are dropped", () => {
+  it("cleans a stored footer: bad links, a WhatsApp social link, extra groups and junk types are dropped, repeats of a network kept in order", () => {
     const raw = {
       about: "Hello",
       closing: 5,
@@ -129,7 +139,7 @@ describe("cleanLinks and cleanFooter read stored data defensively", () => {
       about: "Hello",
       closing: "",
       groups: [{ title: "A", links: [{ label: "ok", href: "/x" }] }],
-      social: [{ network: "instagram", url: "https://instagram.com/a" }],
+      social: [{ network: "instagram", url: "https://instagram.com/a" }, { network: "instagram", url: "https://instagram.com/b" }],
     });
     expect(cleanFooter(null)).toEqual(emptyFooter());
   });
