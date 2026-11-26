@@ -4,6 +4,7 @@ import * as React from "react";
 import { ArrowDownIcon, ArrowUpIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { Button, IconButton } from "./Button";
 import { Field, Input, Textarea } from "./Field";
+import { Combobox, type ComboOption } from "../combobox/Combobox";
 
 export type RowColumn = {
   key: string;
@@ -12,6 +13,10 @@ export type RowColumn = {
   maxLength?: number;
   /** A text box of a few lines, on a line of its own. */
   multiline?: boolean;
+  /** Choices: the column is then the searchable dropdown, and one of them must be picked. */
+  options?: ComboOption[];
+  /** What a new row starts with in this column (blank when not given). */
+  initial?: string;
 };
 
 /**
@@ -48,7 +53,7 @@ export function RowsEditor({
     [next[i], next[j]] = [next[j]!, next[i]!];
     onChange(next);
   };
-  const add = () => onChange([...rows, Object.fromEntries(columns.map((c) => [c.key, ""]))]);
+  const add = () => onChange([...rows, Object.fromEntries(columns.map((c) => [c.key, c.initial ?? ""]))]);
 
   return (
     <div className="space-y-3">
@@ -70,7 +75,21 @@ export function RowsEditor({
               return (
                 <div key={c.key} className={c.multiline ? "w-full" : "min-w-0 sm:min-w-40 sm:flex-1"}>
                   <Field label={c.label} error={error}>
-                    {c.multiline ? <Textarea rows={3} {...props} /> : <Input {...props} />}
+                    {c.options ? (
+                      <Combobox
+                        aria-label={`${c.label}, row ${i + 1}`}
+                        required
+                        value={row[c.key] ?? ""}
+                        onChange={(v) => patch(i, c.key, v)}
+                        options={c.options}
+                        placeholder={c.placeholder}
+                        disabled={disabled}
+                      />
+                    ) : c.multiline ? (
+                      <Textarea rows={3} {...props} />
+                    ) : (
+                      <Input {...props} />
+                    )}
                   </Field>
                 </div>
               );

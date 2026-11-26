@@ -97,4 +97,24 @@ describe("RowsEditor", () => {
     await userEvent.click(screen.getByRole("button", { name: "Remove place 1" }));
     expect(onSubmit).not.toHaveBeenCalled();
   });
+
+  it("draws a column with options as the searchable dropdown, and a new row starts on its initial value", async () => {
+    Element.prototype.scrollIntoView = () => {};
+    const onChange = vi.fn();
+    const withChoice: RowColumn[] = [
+      { key: "name", label: "Name" },
+      { key: "unit", label: "Charged", initial: "fixed", options: [{ value: "fixed", label: "Fixed amount" }, { value: "percent", label: "Percent" }] },
+    ];
+    render(<Harness columns={withChoice} start={[{ name: "Parking", unit: "fixed" }]} onChange={onChange} />);
+    const box = screen.getByRole("combobox", { name: "Charged, row 1" }) as HTMLInputElement;
+    expect(box.value).toBe("Fixed amount");
+    await userEvent.click(box);
+    await userEvent.click(screen.getByRole("option", { name: "Percent" }));
+    expect(onChange).toHaveBeenLastCalledWith([{ name: "Parking", unit: "percent" }]);
+    await userEvent.click(screen.getByRole("button", { name: "Add" }));
+    expect(onChange).toHaveBeenLastCalledWith([
+      { name: "Parking", unit: "percent" },
+      { name: "", unit: "fixed" },
+    ]);
+  });
 });

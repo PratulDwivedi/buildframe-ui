@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.16.0 (2026-11-26)
+
+- **`RowsEditor` columns can be a dropdown:** `options` draws the searchable `Combobox` for that column, and `initial` sets what a new row starts with.
+- Tests first: 1 new.
+- Not checked: in a real browser at 400px and in dark mode (no playground yet, G6).
+
 ## 0.15.0 (2026-11-26)
 
 - **New `RowsEditor`:** an editable list of small text rows with the columns the product names (single line or multiline): add up to `max`, change, move up and down, remove; errors keyed `<row>:<column>`; read only when `disabled`. It stacks on a phone.
