@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.15.0 (2026-11-26)
+
+- **New `RowsEditor`:** an editable list of small text rows with the columns the product names (single line or multiline): add up to `max`, change, move up and down, remove; errors keyed `<row>:<column>`; read only when `disabled`. It stacks on a phone.
+- Tests first: 8 new.
+- Not checked: in a real browser at 400px and in dark mode (no playground yet, G6).
+
 ## 0.14.1 (2026-11-26)
 
 - **`useFlash` is exported** from the package root, so a product's own form can show "Saved" on `PageSaveAction` for a few seconds without repeating the timer. No behaviour change.

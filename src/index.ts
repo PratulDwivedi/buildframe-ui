@@ -3,6 +3,7 @@ export { Button, ButtonLink, IconButton, buttonClass, type ButtonSize, type Butt
 export { Input, Textarea, Label, Field, FormError, FormNotice, Checkbox, inputClass } from "./primitives/Field";
 export { StatusPill, Skeleton, EmptyState, Card, type Tone } from "./primitives/Status";
 export { ProgressBar, type ProgressTone } from "./primitives/Progress";
+export { RowsEditor, type RowColumn } from "./primitives/RowsEditor";
 
 // People
 export { Avatar, AvatarStack, type AvatarSize } from "./people/Avatar";
