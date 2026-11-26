@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.14.1 (2026-11-26)
+
+- **`useFlash` is exported** from the package root, so a product's own form can show "Saved" on `PageSaveAction` for a few seconds without repeating the timer. No behaviour change.
+
 ## 0.14.0 (2026-11-25)
 
 The footer's social links: several of one network, in an order the merchant chooses.

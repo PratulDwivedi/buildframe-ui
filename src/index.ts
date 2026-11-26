@@ -40,6 +40,8 @@ export { HelpSection, HelpSteps } from "./help/sections";
 export { PageHeaderProvider, PageHeader, PageActions, usePageHeader, usePageActionsSlot, useHasPageHeader, type PageHeaderValue } from "./shell/page-header";
 
 export { PageSaveAction } from "./shell/PageSaveAction";
+/** The few-seconds "Saved" that `PageSaveAction` shows (`saved`). */
+export { useFlash } from "./lib/useFlash";
 export { NavProgressProvider, LinkPending, useNavProgress } from "./shell/NavProgress";
 
 // Theming
