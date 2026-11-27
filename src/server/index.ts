@@ -4,3 +4,4 @@ export { createBf, bfEnvFromProcess, type BfResult, type BfEnv, type SignupInput
 export { callRpc, callRpcEnvelope, callRpcPaged, type RpcEnvelope } from "./rpc";
 export { createGoogleSignIn, googleEnvFromProcess, googleRedirectUri, GoogleError, type PendingSignIn, type GoogleIdentity } from "./google";
 export { toCsvFile, toXlsxFile, fileResponse, type Cell, type ExportTies, type FileOptions } from "./export";
+export { createSignupRoutes, type SignupRoutesOptions } from "./signup-routes";

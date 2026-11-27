@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.17.0 (2026-11-27)
+
+- **New `createSignupRoutes`** (`@buildframe/ui/server`): the `POST /api/signup` and `/api/signup/resend` handlers a product offers to a marketing site that holds no platform secret. The person check runs first, return addresses are an allow list, and the new organisation's address is answered as `site_url`.
+- Tests first: 13 new.
+
 ## 0.16.1 (2026-11-27)
 
 Dropdowns on phones: on an iPhone the list opened off the left edge of the screen and could not be used.
