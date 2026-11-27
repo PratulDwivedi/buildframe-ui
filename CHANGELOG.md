@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.18.1 (2026-11-27)
+
+- **Fix, breaking:** `cameFromRecentRecovery` (0.18.0) refused every real reset, because Supabase Auth records a redeemed reset `token_hash` as `otp`, not `recovery`. It is replaced by `sealRecovery` (in the confirm route) and `provesRecovery` (before saving the password): a signature over the session the link made, plus a recent emailed link sign in.
+- Tests first.
+
 ## 0.18.0 (2026-11-27)
 
 Joining from an invitation and resetting a password, shared instead of copied into each product.

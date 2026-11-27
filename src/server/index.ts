@@ -5,4 +5,4 @@ export { callRpc, callRpcEnvelope, callRpcPaged, type RpcEnvelope } from "./rpc"
 export { createGoogleSignIn, googleEnvFromProcess, googleRedirectUri, GoogleError, type PendingSignIn, type GoogleIdentity } from "./google";
 export { toCsvFile, toXlsxFile, fileResponse, type Cell, type ExportTies, type FileOptions } from "./export";
 export { createSignupRoutes, type SignupRoutesOptions } from "./signup-routes";
-export { cameFromRecentRecovery, RECOVERY_WINDOW_S, CLOCK_SKEW_S } from "./recovery";
+export { sealRecovery, provesRecovery, RECOVERY_WINDOW_S, CLOCK_SKEW_S, type RecoveryClaims } from "./recovery";
