@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.16.1 (2026-11-27)
+
+Dropdowns on phones: on an iPhone the list opened off the left edge of the screen and could not be used.
+
+- **No more zoom on focus:** `base.css` gives fields at least 16px text where the pointer is a finger, so the phone does not zoom the page in. An app must import `base.css` to get this.
+- **`Combobox`, `MultiCombobox` and `Popover` are placed within what can be seen** (the visual view), so a pinched in page or an open keyboard no longer pushes the list off screen; the dropdown opens upward when the keyboard covers the room below, and follows the view as it moves.
+- Tests first: 4 new.
+- Not checked: on a real phone before release; `HtmlEditor`'s link bubble still measures the old way.
+
 ## 0.16.0 (2026-11-26)
 
 - **`RowsEditor` columns can be a dropdown:** `options` draws the searchable `Combobox` for that column, and `initial` sets what a new row starts with.

@@ -45,3 +45,11 @@
     }
   }
 }
+
+/* A phone zooms the page in when a field with text under 16px gets focus, and leaves it zoomed. Outside the layers,
+   so it wins over a field's own smaller size; a field with larger text keeps it. */
+@media (pointer: coarse) {
+  input:not([type="checkbox"]):not([type="radio"]), textarea, select, [contenteditable="true"] {
+    font-size: max(16px, 1em);
+  }
+}

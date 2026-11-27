@@ -3,7 +3,7 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
 import { cn } from "../lib/cn";
-import { useOutsidePress } from "../combobox/position";
+import { useOutsidePress, viewport } from "../combobox/position";
 
 /**
  * A small popover anchored to a button: the Download choices, the column chooser, the view menu.
@@ -59,9 +59,10 @@ export function Popover({
     const place = () => {
       const r = btn.current?.getBoundingClientRect();
       if (!r) return;
-      const w = Math.min(width, window.innerWidth - 16);
+      const view = viewport();
+      const w = Math.min(width, view.right - view.left - 16);
       const left = align === "end" ? r.right - w : r.left;
-      setPos({ top: r.bottom + 6, left: Math.max(8, Math.min(left, window.innerWidth - w - 8)) });
+      setPos({ top: r.bottom + 6, left: Math.max(view.left + 8, Math.min(left, view.right - w - 8)) });
     };
     place();
     window.addEventListener("resize", place);
@@ -78,8 +79,9 @@ export function Popover({
     if (!open || !pos || !panel.current || !btn.current) return;
     const h = panel.current.offsetHeight;
     const r = btn.current.getBoundingClientRect();
-    const fitsBelow = r.bottom + 6 + h <= window.innerHeight - 8;
-    const wanted = fitsBelow ? r.bottom + 6 : Math.max(8, r.top - 6 - h);
+    const view = viewport();
+    const fitsBelow = r.bottom + 6 + h <= view.bottom - 8;
+    const wanted = fitsBelow ? r.bottom + 6 : Math.max(view.top + 8, r.top - 6 - h);
     if (Math.abs(wanted - pos.top) > 1) setPos({ ...pos, top: wanted });
   }, [open, pos]);
 
@@ -116,7 +118,7 @@ export function Popover({
             tabIndex={-1}
             aria-label={label}
             onKeyDown={onKey}
-            style={{ position: "fixed", top: pos.top, left: pos.left, width: Math.min(width, window.innerWidth - 16) }}
+            style={{ position: "fixed", top: pos.top, left: pos.left, width: Math.min(width, viewport().right - viewport().left - 16) }}
             className={cn("z-[80] rounded-xl border border-bf-line bg-bf-surface p-1 text-sm text-bf-copy shadow-[var(--bf-shadow-pop)] outline-none", className)}
           >
             {typeof children === "function" ? children(close) : children}
