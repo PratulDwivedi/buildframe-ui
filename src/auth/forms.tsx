@@ -211,8 +211,11 @@ export function SignInForm({
 
 /* ── forgot and reset ─────────────────────────────────────────────────────────────────────────────── */
 
-/** Asks for a reset link. Says the same thing whether or not the address has an account. */
-export function ForgotPasswordForm({ onSubmit }: { onSubmit: (email: string) => Promise<AuthResult> }) {
+/**
+ * Asks for a reset link. Says the same thing whether or not the address has an account. `children` is drawn above the
+ * button, for what a product adds to the form (a bot check).
+ */
+export function ForgotPasswordForm({ onSubmit, children }: { onSubmit: (email: string) => Promise<AuthResult>; children?: React.ReactNode }) {
   const [email, setEmail] = React.useState("");
   const [sent, setSent] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
@@ -233,6 +236,7 @@ export function ForgotPasswordForm({ onSubmit }: { onSubmit: (email: string) => 
       <Field label="Email" htmlFor="bf-forgot-email">
         <Input id="bf-forgot-email" type="email" autoComplete="email" required autoFocus value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" className="h-11" disabled={pending} />
       </Field>
+      {children}
       <FormError message={error} />
       <FormNotice message={sent ? "If that address has an account, a link to set a new password is on its way. It works once." : null} />
       <Button type="submit" variant="primary" className={wide} pending={pending}>

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.18.0 (2026-11-27)
+
+Joining from an invitation and resetting a password, shared instead of copied into each product.
+
+- **New `InviteNewAccountForm` and `InviteAcceptButton`**, and the pure `inviteDoor` (which screen an invitation link shows, so none offers a button that cannot work) with `INVITE_CLOSED` texts.
+- **New `cameFromRecentRecovery`** (`@buildframe/ui/server`): the gate on choosing a new password without the old one.
+- **`ForgotPasswordForm` takes `children`**, drawn above its button, for a bot check.
+- Tests first.
+
 ## 0.17.0 (2026-11-27)
 
 - **New `createSignupRoutes`** (`@buildframe/ui/server`): the `POST /api/signup` and `/api/signup/resend` handlers a product offers to a marketing site that holds no platform secret. The person check runs first, return addresses are an allow list, and the new organisation's address is answered as `site_url`.
