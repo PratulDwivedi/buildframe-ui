@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.20.0 (2026-11-28)
+
+A customer's own domain is shown the same way wherever it is connected.
+
+- **New `DnsRecords`:** the DNS records to create, the name and the value each with a copy icon button beside it (a tick only once the browser has taken it); column headings on a wide screen, stacked with labels on a phone.
+- **New `domainStatus`** (also in `@buildframe/ui/core`) with the types `DnsRecord` and `DomainStatus`: the words and the `StatusPill` tone for pending, live, not connected and removed.
+- Tests first: 7 new.
+- Not checked: in a real browser at 400px and in dark mode (no playground yet, G6).
+
 ## 0.19.0 (2026-11-28)
 
 An invitation page can now refuse a link that cannot be accepted.

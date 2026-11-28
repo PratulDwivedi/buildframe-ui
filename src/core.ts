@@ -4,6 +4,7 @@ export { brandCss, readableOn, isHex, type BrandColours } from "./lib/brand";
 export { inviteDoor, isInviteClosed, INVITE_CLOSED, type Invitation, type InviteBlock, type InviteClosedDoor, type InviteDoor, type InviteStatus } from "./auth/invite";
 export { safeNext, authMessage, signInErrorText, AUTH_MESSAGES, type AuthMessageCode } from "./auth/messages";
 export * from "./dashboard/series";
+export { domainStatus, type DnsRecord, type DomainStatus } from "./domains/status";
 export { CATEGORY_COUNT, categoryOf, categoryStyle } from "./lib/category";
 export { themeInitScript, type ThemeDefault } from "./theme/init";
 export { APPEARANCE_MODES, appearanceErrors, brandFromAppearance, emptyAppearance, isAppearanceMode, type AppearanceMode, type AppearanceValue } from "./site/appearance";

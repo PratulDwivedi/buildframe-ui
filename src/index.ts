@@ -33,6 +33,10 @@ export type { ViewPrefs, SavedView, Density, Layout } from "./data/prefs";
 export { StatTile, StatRow, DashCard, Change, BarSeries, ShareBars, PeriodSwitch, type StatTone, type StatSubTone, type StatLayout, type BarKey } from "./dashboard/Stats";
 export { periodChange, bucketSeries, pickPeriod, type PeriodChange, type SeriesPoint } from "./dashboard/series";
 
+// Customer domains
+export { DnsRecords } from "./domains/DnsRecords";
+export { domainStatus, type DnsRecord, type DomainStatus } from "./domains/status";
+
 // Help panel (the "?" at the right end of a page header)
 export { PageHelp } from "./help/PageHelp";
 export { HelpSection, HelpSteps } from "./help/sections";
