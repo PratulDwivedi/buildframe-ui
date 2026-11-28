@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.19.0 (2026-11-28)
+
+An invitation page can now refuse a link that cannot be accepted.
+
+- **`inviteDoor` reads `blocked`** (`ended`, `other_organisation`, `inactive_account`, `used_login`) and returns it as a closed door, with its text in `INVITE_CLOSED`. New `isInviteClosed` says whether a door is one of those texts. **A product that lists the closed doors by name must use it instead.**
+- **`inviteDoor(invitation, email, tenantCode)`:** where each organisation has its own address, another organisation's invitation reads as invalid.
+- Tests first.
+
 ## 0.18.1 (2026-11-27)
 
 - **Fix, breaking:** `cameFromRecentRecovery` (0.18.0) refused every real reset, because Supabase Auth records a redeemed reset `token_hash` as `otp`, not `recovery`. It is replaced by `sealRecovery` (in the confirm route) and `provesRecovery` (before saving the password): a signature over the session the link made, plus a recent emailed link sign in.

@@ -19,6 +19,25 @@ describe("inviteDoor: which screen an invitation link shows", () => {
     expect(inviteDoor(inv, "asha@example.com")).toBe("no_account");
   });
   it("signed in as somebody else says so", () => expect(inviteDoor({ ...inv, has_login: true }, "other@example.com")).toBe("wrong_account"));
+  it.each(["ended", "other_organisation", "inactive_account", "used_login"] as const)("blocked (%s): says why and offers nothing, whoever is signed in", (blocked) => {
+    for (const who of [null, "asha@example.com", "other@example.com"]) expect(inviteDoor({ ...inv, blocked }, who)).toBe(blocked);
+    expect(INVITE_CLOSED[blocked].title).toBeTruthy();
+    expect(INVITE_CLOSED[blocked].text).not.toMatch(/[\u2013\u2014]/);
+  });
+  it("a used or withdrawn invitation says that before any block", () => {
+    expect(inviteDoor({ ...inv, status: "revoked", blocked: "ended" }, null)).toBe("revoked");
+  });
+  it("is invalid on another organisation's address, whatever its state", () => {
+    expect(inviteDoor({ ...inv, tenant_code: "acme" }, null, "bloom")).toBe("invalid");
+    expect(inviteDoor({ ...inv, status: "accepted", tenant_code: "acme" }, null, "bloom")).toBe("invalid");
+    expect(inviteDoor({ ...inv, tenant_code: "acme" }, null, "acme")).toBe("new");
+  });
+  it("fails closed when the address is known and the invitation does not say whose it is", () => {
+    expect(inviteDoor(inv, null, "acme")).toBe("invalid");
+  });
+  it("a product with one address for everybody checks no organisation", () => {
+    expect(inviteDoor({ ...inv, tenant_code: "acme" }, null)).toBe("new");
+  });
 });
 
 async function fill(name: string, password: string, confirm: string) {

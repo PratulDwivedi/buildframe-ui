@@ -70,5 +70,5 @@ export {
   type SignUpResult,
 } from "./auth/forms";
 export { InviteNewAccountForm, InviteAcceptButton } from "./auth/InviteForms";
-export { inviteDoor, INVITE_CLOSED, type Invitation, type InviteDoor, type InviteStatus } from "./auth/invite";
+export { inviteDoor, isInviteClosed, INVITE_CLOSED, type Invitation, type InviteBlock, type InviteClosedDoor, type InviteDoor, type InviteStatus } from "./auth/invite";
 export { safeNext, authMessage, signInErrorText, AUTH_MESSAGES, type AuthMessageCode } from "./auth/messages";
